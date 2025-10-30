@@ -1,0 +1,62 @@
+/* Fix para Vue + Template Bootstrap */
+
+/* Reset completo para evitar conflictos */
+html, body {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  overflow-x: hidden !important;
+  height: auto !important;
+}
+
+#app {
+  margin: 0 !important;
+  padding: 0 !important;
+  max-width: 100% !important;
+  width: 100% !important;
+  display: block !important;
+  grid-template-columns: unset !important;
+}
+
+/* Asegurar que el slider no se salga */
+.slider_area {
+  width: 100%;
+  overflow: hidden;
+}
+
+.slider_active {
+  width: 100%;
+}
+
+.single_slider {
+  width: 100% !important;
+}
+
+/* Asegurar que las secciones ocupen todo el ancho */
+.best_burgers_area,
+.Burger_President_area,
+.about_area,
+.video_area,
+.testimonial_area,
+.instragram_area {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Fix para el header */
+.header-area {
+  width: 100%;
+}
+
+/* Fix para el footer */
+.footer {
+  width: 100%;
+}
+
+/* Asegurar que container-fluid funcione correctamente */
+.container-fluid {
+  width: 100%;
+  max-width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+}
