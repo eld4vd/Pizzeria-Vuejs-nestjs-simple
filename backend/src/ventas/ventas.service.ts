@@ -86,6 +86,17 @@ export class VentasService {
           
           await queryRunner.manager.save(detalle);
 
+          // Descontar stock del producto
+          const producto = await queryRunner.manager.findOne(Producto, {
+            where: { id: detalleDto.idProducto }
+          });
+
+          if (producto) {
+            producto.stock = Number(producto.stock) - Number(detalleDto.cantidad);
+            await queryRunner.manager.save(producto);
+            console.log(`📦 Stock producto "${producto.nombre}": ${Number(producto.stock) + Number(detalleDto.cantidad)} → ${producto.stock}`);
+          }
+
           // Descontar stock de ingredientes del producto vendido
           await this.descontarStockIngredientes(
             detalleDto.idProducto,
@@ -109,21 +120,41 @@ export class VentasService {
   }
 
   /**
-   * Valida que haya stock suficiente de ingredientes para todos los productos de la venta
+   * Valida que haya stock suficiente de productos e ingredientes para la venta
    */
   private async validarStockDisponible(detalles: any[]): Promise<void> {
     console.log(`🔎 Validando stock para ${detalles.length} productos...`);
     
     for (const detalle of detalles) {
-      // Obtener ingredientes del producto
+      // 1. Validar stock del producto
+      const producto = await this.productosRepository.findOne({
+        where: { id: detalle.idProducto }
+      });
+
+      if (!producto) {
+        throw new NotFoundException(`Producto con ID ${detalle.idProducto} no encontrado`);
+      }
+
+      const stockProducto = Number(producto.stock) || 0;
+      const cantidadSolicitada = Number(detalle.cantidad) || 0;
+
+      console.log(`  📦 Producto "${producto.nombre}": Stock ${stockProducto}, Solicitado ${cantidadSolicitada}`);
+
+      if (stockProducto < cantidadSolicitada) {
+        throw new BadRequestException(
+          `Stock insuficiente del producto "${producto.nombre}". ` +
+          `Disponible: ${stockProducto}, Solicitado: ${cantidadSolicitada}`
+        );
+      }
+
+      // 2. Validar stock de ingredientes del producto
       const productoIngredientes = await this.productoIngredientesRepository.find({
         where: { idProducto: detalle.idProducto },
         relations: ['ingrediente'],
       });
 
-      console.log(`  📦 Producto ID ${detalle.idProducto}: ${productoIngredientes.length} ingredientes`);
+      console.log(`  🧪 Ingredientes: ${productoIngredientes.length}`);
 
-      // Validar stock de cada ingrediente
       for (const prodIng of productoIngredientes) {
         const cantidadIngrediente = Number(prodIng.cantidad) || 0;
         const cantidadProducto = Number(detalle.cantidad) || 0;
@@ -135,7 +166,7 @@ export class VentasService {
 
         if (stockActual < cantidadNecesaria) {
           throw new BadRequestException(
-            `Stock insuficiente para el ingrediente "${ingrediente.nombre}". ` +
+            `Stock insuficiente del ingrediente "${ingrediente.nombre}". ` +
             `Necesario: ${cantidadNecesaria}, Disponible: ${stockActual}`
           );
         }
@@ -163,7 +194,6 @@ export class VentasService {
 
     // Descontar stock de cada ingrediente
     for (const prodIng of productoIngredientes) {
-      // Convertir a números para asegurar la operación correcta
       const cantidadIngrediente = Number(prodIng.cantidad) || 0;
       const cantidadProd = Number(cantidadProducto) || 0;
       const cantidadADescontar = cantidadIngrediente * cantidadProd;

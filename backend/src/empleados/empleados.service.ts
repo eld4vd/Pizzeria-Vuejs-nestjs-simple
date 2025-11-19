@@ -57,6 +57,10 @@ export class EmpleadosService {
     return this.empleadosRepository.softRemove(empleado);
   }
 
+  async findByUsuario(usuario: string): Promise<Empleado | null> {
+    return this.empleadosRepository.findOneBy({ usuario: usuario.trim() });
+  }
+
   async validate(usuario: string, clave: string): Promise<Empleado> {
     const empleado = await this.empleadosRepository.findOne({
       where: { usuario },

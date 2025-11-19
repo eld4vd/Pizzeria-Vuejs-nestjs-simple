@@ -34,7 +34,7 @@ onUnmounted(() => {
         <div class="logo">
           <span class="flaticon-pizza-1"></span>
           <span v-if="sidebarOpen" class="logo-text">
-            <strong>Pizza</strong><br>
+            <strong>Restaurante</strong><br>
             <small>Delicious</small>
           </span>
         </div>
@@ -88,32 +88,6 @@ onUnmounted(() => {
             </router-link>
           </li>
 
-          <!-- Categorías -->
-          <li>
-            <router-link 
-              to="/dashboard/categorias" 
-              class="nav-item" 
-              active-class="active"
-              :title="!sidebarOpen ? 'Categorías' : ''"
-            >
-              <i class="fas fa-tags"></i>
-              <span v-if="sidebarOpen">Categorías</span>
-            </router-link>
-          </li>
-
-          <!-- Tamaños -->
-          <li>
-            <router-link 
-              to="/dashboard/tamaños" 
-              class="nav-item" 
-              active-class="active"
-              :title="!sidebarOpen ? 'Tamaños' : ''"
-            >
-              <i class="fas fa-ruler-horizontal"></i>
-              <span v-if="sidebarOpen">Tamaños</span>
-            </router-link>
-          </li>
-
           <!-- Ingredientes -->
           <li>
             <router-link 
@@ -124,6 +98,32 @@ onUnmounted(() => {
             >
               <i class="fas fa-leaf"></i>
               <span v-if="sidebarOpen">Ingredientes</span>
+            </router-link>
+          </li>
+
+          <!-- Proveedores -->
+          <li>
+            <router-link 
+              to="/dashboard/proveedores" 
+              class="nav-item" 
+              active-class="active"
+              :title="!sidebarOpen ? 'Proveedores' : ''"
+            >
+              <i class="fas fa-truck"></i>
+              <span v-if="sidebarOpen">Proveedores</span>
+            </router-link>
+          </li>
+
+          <!-- Compras -->
+          <li>
+            <router-link 
+              to="/dashboard/compras" 
+              class="nav-item" 
+              active-class="active"
+              :title="!sidebarOpen ? 'Compras' : ''"
+            >
+              <i class="fas fa-shopping-cart"></i>
+              <span v-if="sidebarOpen">Compras</span>
             </router-link>
           </li>
 

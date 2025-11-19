@@ -102,11 +102,10 @@ defineExpose({ obtenerLista })
           <thead>
             <tr>
               <th width="4%">#</th>
-              <th width="22%">Ingrediente</th>
-              <th width="22%">Descripción</th>
-              <th width="10%">Precio/Ud</th>
-              <th width="10%">Unidad</th>
-              <th width="8%">Stock</th>
+              <th width="25%">Ingrediente</th>
+              <th width="25%">Descripción</th>
+              <th width="12%">Unidad</th>
+              <th width="10%">Stock</th>
               <th width="12%">Estado</th>
               <th width="12%" class="text-center">Acciones</th>
             </tr>
@@ -138,12 +137,6 @@ defineExpose({ obtenerLista })
                 </small>
               </td>
               <td>
-                <span v-if="ingrediente.precioPorUnidad" class="precio-compact">
-                  Bs. {{ Number(ingrediente.precioPorUnidad).toFixed(2) }}
-                </span>
-                <span v-else class="text-muted" style="font-size: 0.8rem;">-</span>
-              </td>
-              <td>
                 <span v-if="ingrediente.unidadMedida" class="crud-badge crud-badge-compact crud-badge-info">
                   {{ ingrediente.unidadMedida }}
                 </span>
@@ -152,9 +145,10 @@ defineExpose({ obtenerLista })
               <td>
                 <span 
                   class="crud-badge crud-badge-compact"
-                  :class="ingrediente.stock > 0 ? 'crud-badge-success' : 'crud-badge-warning'"
+                  :class="ingrediente.stock > 0 ? 'crud-badge-success' : (ingrediente.stock === 0 ? 'crud-badge-warning' : 'crud-badge-danger')"
+                  style="font-size: 0.9rem; font-weight: 600;"
                 >
-                  {{ ingrediente.stock }}
+                  {{ Number(ingrediente.stock).toFixed(2) }}
                 </span>
               </td>
               <td>

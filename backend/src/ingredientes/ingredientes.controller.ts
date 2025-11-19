@@ -23,13 +23,11 @@ export class IngredientesController {
     return this.ingredientesService.create(createIngredienteDto);
   }
 
-  @Public()
   @Get()
   findAll() {
     return this.ingredientesService.findAll();
   }
 
-  @Public()
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.ingredientesService.findOne(+id);

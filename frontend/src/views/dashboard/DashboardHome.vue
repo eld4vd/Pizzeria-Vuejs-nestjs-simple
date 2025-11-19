@@ -38,28 +38,28 @@
         </div>
       </router-link>
 
-      <!-- Categorías -->
-      <router-link to="/dashboard/categorias" class="shortcut-card shortcut-categorias">
+      <!-- Proveedores -->
+      <router-link to="/dashboard/proveedores" class="shortcut-card shortcut-proveedores">
         <div class="shortcut-icon">
-          <i class="fas fa-tags"></i>
+          <i class="fas fa-truck"></i>
         </div>
         <div class="shortcut-content">
-          <h3>Categorías</h3>
-          <p>Organizar categorías de productos</p>
+          <h3>Proveedores</h3>
+          <p>Gestionar proveedores</p>
         </div>
         <div class="shortcut-arrow">
           <i class="fas fa-arrow-right"></i>
         </div>
       </router-link>
 
-      <!-- Tamaños -->
-      <router-link to="/dashboard/tamanos" class="shortcut-card shortcut-tamanos">
+      <!-- Compras -->
+      <router-link to="/dashboard/compras" class="shortcut-card shortcut-compras">
         <div class="shortcut-icon">
-          <i class="fas fa-ruler-combined"></i>
+          <i class="fas fa-shopping-bag"></i>
         </div>
         <div class="shortcut-content">
-          <h3>Tamaños</h3>
-          <p>Gestionar tamaños disponibles</p>
+          <h3>Compras</h3>
+          <p>Registrar compras de ingredientes</p>
         </div>
         <div class="shortcut-arrow">
           <i class="fas fa-arrow-right"></i>
@@ -231,20 +231,20 @@
   background: linear-gradient(135deg, #fca100, #e85a19);
 }
 
-.shortcut-categorias {
-  color: #28a745;
-}
-
-.shortcut-categorias .shortcut-icon {
-  background: linear-gradient(135deg, #28a745, #1e7e34);
-}
-
-.shortcut-tamanos {
+.shortcut-proveedores {
   color: #17a2b8;
 }
 
-.shortcut-tamanos .shortcut-icon {
+.shortcut-proveedores .shortcut-icon {
   background: linear-gradient(135deg, #17a2b8, #117a8b);
+}
+
+.shortcut-compras {
+  color: #28a745;
+}
+
+.shortcut-compras .shortcut-icon {
+  background: linear-gradient(135deg, #28a745, #1e7e34);
 }
 
 .shortcut-ingredientes {

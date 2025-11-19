@@ -20,13 +20,10 @@ export class Ingrediente {
   @Column('text', { nullable: true })
   descripcion: string | null;
 
-  @Column('decimal', { precision: 10, scale: 2, nullable: true })
-  precioPorUnidad: number | null;
-
   @Column('varchar', { length: 50, nullable: true })
   unidadMedida: string | null; // gramos, unidades, ml, etc.
 
-  @Column('integer', { default: 0 })
+  @Column('decimal', { precision: 10, scale: 2, default: 0 })
   stock: number;
 
   @Column('varchar', { length: 255, nullable: true })

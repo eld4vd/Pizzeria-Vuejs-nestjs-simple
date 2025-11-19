@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 import { CreateProductoDto } from './dto/create-producto.dto';
 import { UpdateProductoDto } from './dto/update-producto.dto';
 import { Producto } from './entities/producto.entity';
-import { Categoria } from 'src/categorias/entities/categoria.entity';
 import { ProductoIngrediente } from 'src/producto-ingredientes/entities/producto-ingrediente.entity';
 import { Ingrediente } from 'src/ingredientes/entities/ingrediente.entity';
 
@@ -13,8 +12,6 @@ export class ProductosService {
   constructor(
     @InjectRepository(Producto)
     private productosRepository: Repository<Producto>,
-    @InjectRepository(Categoria)
-    private categoriasRepository: Repository<Categoria>,
     @InjectRepository(ProductoIngrediente)
     private productoIngredientesRepository: Repository<ProductoIngrediente>,
     @InjectRepository(Ingrediente)
@@ -22,52 +19,32 @@ export class ProductosService {
   ) {}
 
   async create(createProductoDto: CreateProductoDto): Promise<Producto> {
-    // Validar si la categoría requiere personalización
-    const categoria = await this.categoriasRepository.findOne({
-      where: { id: createProductoDto.idCategoria }
-    });
-
-    if (!categoria) {
-      throw new NotFoundException('La categoría no existe');
-    }
-
-    // Si la categoría requiere personalización, el tamaño es obligatorio
-    if (categoria.requierePersonalizacion && !createProductoDto.idTamaño) {
-      throw new BadRequestException('Esta categoría requiere que selecciones un tamaño');
-    }
-
     const existe = await this.productosRepository.findOneBy({
       nombre: createProductoDto.nombre.trim(),
-      idCategoria: createProductoDto.idCategoria,
+      categoria: createProductoDto.categoria,
     });
 
     if (existe) throw new ConflictException('El producto ya existe');
 
     const producto = new Producto();
-    producto.idCategoria = createProductoDto.idCategoria;
-    if (createProductoDto.idTamaño) {
-      producto.idTamaño = createProductoDto.idTamaño;
-    }
+    producto.categoria = createProductoDto.categoria;
     producto.nombre = createProductoDto.nombre.trim();
     producto.descripcion = (createProductoDto.descripcion ?? '').trim();
-    // El precio base lo establece el usuario (ej: 40 Bs)
     producto.precioBase = Number(createProductoDto.precio);
-    // El precio final será: precioBase + costo ingredientes
-    producto.precio = Number(createProductoDto.precio); // Por ahora, sin ingredientes
+    producto.precio = Number(createProductoDto.precio);
+    producto.stock = createProductoDto.stock ?? 0;
+    producto.tamañosDisponibles = createProductoDto.tamañosDisponibles || [];
     producto.imagenUrl = (createProductoDto.imagenUrl ?? '').trim();
     producto.disponible = createProductoDto.disponible ?? true;
     producto.destacado = createProductoDto.destacado ?? false;
     
     const productoGuardado = await this.productosRepository.save(producto);
-    
-    // El precio se actualizará cuando se agreguen ingredientes
-    // (precio final = precio base + costo ingredientes)
     return productoGuardado;
   }
 
   async findAll(): Promise<Producto[]> {
     return this.productosRepository.find({ 
-      relations: ['categoria', 'tamaño', 'ingredientes', 'ingredientes.ingrediente'],
+      relations: ['ingredientes', 'ingredientes.ingrediente'],
       order: { nombre: 'ASC' } 
     });
   }
@@ -75,7 +52,7 @@ export class ProductosService {
   async findOne(id: number): Promise<Producto> {
     const producto = await this.productosRepository.findOne({
       where: { id },
-      relations: ['categoria', 'tamaño', 'ingredientes', 'ingredientes.ingrediente'],
+      relations: ['ingredientes', 'ingredientes.ingrediente'],
     });
     if (!producto) throw new NotFoundException('El producto no existe');
     return producto;
@@ -117,26 +94,10 @@ export class ProductosService {
       return 0;
     }
 
-    let precioTotal = 0;
-
-    for (const prodIng of productoIngredientes) {
-      const ingrediente = prodIng.ingrediente;
-      
-      if (!ingrediente.precioPorUnidad) {
-        throw new BadRequestException(
-          `El ingrediente "${ingrediente.nombre}" no tiene precio por unidad definido. ` +
-          `Por favor, establece un precio antes de calcular el precio del producto.`
-        );
-      }
-
-      // Sumar: precio del ingrediente * cantidad usada en el producto
-      // Convertir a números para evitar concatenación de strings
-      const precioIngrediente = Number(ingrediente.precioPorUnidad) || 0;
-      const cantidadIngrediente = Number(prodIng.cantidad) || 0;
-      precioTotal += precioIngrediente * cantidadIngrediente;
-    }
-
-    return Number(precioTotal);
+    // Nota: El cálculo de precio ahora requiere datos de compras
+    // Por simplicidad, retornamos 0 y el precio se maneja manualmente
+    // TODO: Implementar cálculo basado en el precio promedio de compras
+    return 0;
   }
 
   /**

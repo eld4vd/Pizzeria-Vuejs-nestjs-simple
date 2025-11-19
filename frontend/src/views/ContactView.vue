@@ -62,10 +62,10 @@ onMounted(() => {
               <p><span>Teléfono:</span> <a href="tel://1234567920">+ 1235 2355 98</a></p>
             </div>
             <div class="col-md-12 mb-3">
-              <p><span>Email:</span> <a href="mailto:info@pizza.com">info@pizza.com</a></p>
+              <p><span>Email:</span> <a href="mailto:info@restaurante.com">info@restaurante.com</a></p>
             </div>
             <div class="col-md-12 mb-3">
-              <p><span>Sitio Web:</span> <a href="#">pizza.com</a></p>
+              <p><span>Sitio Web:</span> <a href="#">restaurante.com</a></p>
             </div>
           </div>
         </div>

@@ -32,7 +32,6 @@ export class IngredientesService {
     const ingrediente = new Ingrediente();
     ingrediente.nombre = createIngredienteDto.nombre.trim();
     ingrediente.descripcion = createIngredienteDto.descripcion?.trim() || null;
-    ingrediente.precioPorUnidad = createIngredienteDto.precioPorUnidad || null;
     ingrediente.unidadMedida = createIngredienteDto.unidadMedida?.trim() || null;
     ingrediente.stock = createIngredienteDto.stock || 0;
     ingrediente.imagenUrl = createIngredienteDto.imagenUrl?.trim() || null;
@@ -76,10 +75,6 @@ export class IngredientesService {
 
     if (updateIngredienteDto.descripcion !== undefined) {
       ingrediente.descripcion = updateIngredienteDto.descripcion?.trim();
-    }
-
-    if (updateIngredienteDto.precioPorUnidad !== undefined) {
-      ingrediente.precioPorUnidad = updateIngredienteDto.precioPorUnidad;
     }
 
     if (updateIngredienteDto.unidadMedida !== undefined) {

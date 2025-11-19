@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import axios from '@/plugins/axios'
-import type { Producto } from '@/models/producto'
-import type { Categoria } from '@/models/categoria'
-import type { Tamaño } from '@/models/tamaño'
+import type { Producto, CategoriaProducto } from '@/models/producto'
 import { useToast } from 'vue-toastification'
 
 const toast = useToast()
@@ -13,24 +11,24 @@ const emit = defineEmits<{
 }>()
 
 const productos = ref<Producto[]>([])
-const categorias = ref<Categoria[]>([])
-const tamaños = ref<Tamaño[]>([])
 const loading = ref(false)
 const searchTerm = ref('')
-const categoriaFiltro = ref<number | null>(null)
+const categoriaFiltro = ref<CategoriaProducto | null>(null)
+
+// Opciones de categorías
+const categoriasOptions: { value: CategoriaProducto; label: string; icon: string }[] = [
+  { value: 'pizza', label: 'Pizzas', icon: '🍕' },
+  { value: 'bebida', label: 'Bebidas', icon: '🥤' },
+  { value: 'postre', label: 'Postres', icon: '🍰' },
+  { value: 'extra', label: 'Extras', icon: '🍟' }
+]
 
 const obtenerLista = async () => {
   try {
     loading.value = true
-    const [productosRes, categoriasRes, tamañosRes] = await Promise.all([
-      axios.get('/productos'),
-      axios.get('/categorias'),
-      axios.get('/tamanos')
-    ])
+    const productosRes = await axios.get('/productos')
     // Ordenar por ID descendente (los más recientes primero)
     productos.value = productosRes.data.sort((a: Producto, b: Producto) => b.id - a.id)
-    categorias.value = categoriasRes.data
-    tamaños.value = tamañosRes.data
   } catch (error) {
     console.error('Error al obtener productos:', error)
     toast.error('Error al cargar la lista de productos')
@@ -44,7 +42,7 @@ const filteredProductos = computed(() => {
 
   // Filtrar por categoría
   if (categoriaFiltro.value) {
-    result = result.filter(p => p.idCategoria === categoriaFiltro.value)
+    result = result.filter(p => p.categoria === categoriaFiltro.value)
   }
 
   // Filtrar por búsqueda
@@ -59,15 +57,14 @@ const filteredProductos = computed(() => {
   return result
 })
 
-const getCategoriaNombre = (idCategoria: number) => {
-  const categoria = categorias.value.find(c => c.id === idCategoria)
-  return categoria?.nombre || 'Sin categoría'
+const getCategoriaNombre = (categoria: CategoriaProducto) => {
+  const cat = categoriasOptions.find(c => c.value === categoria)
+  return cat ? `${cat.icon} ${cat.label}` : categoria
 }
 
-const getTamañoNombre = (idTamaño: number | null) => {
-  if (!idTamaño) return '-'
-  const tamaño = tamaños.value.find(t => t.id === idTamaño)
-  return tamaño?.nombre || '-'
+const getTamañosTexto = (tamaños: string[] | undefined) => {
+  if (!tamaños || tamaños.length === 0) return '-'
+  return tamaños.map(t => t.charAt(0).toUpperCase() + t.slice(1)).join(', ')
 }
 
 const handleEdit = (producto: Producto) => {
@@ -112,11 +109,11 @@ defineExpose({ obtenerLista })
           >
             <option :value="null">Todas las categorías</option>
             <option 
-              v-for="categoria in categorias" 
-              :key="categoria.id"
-              :value="categoria.id"
+              v-for="cat in categoriasOptions" 
+              :key="cat.value"
+              :value="cat.value"
             >
-              {{ categoria.nombre }}
+              {{ cat.icon }} {{ cat.label }}
             </option>
           </select>
         </div>
@@ -149,10 +146,11 @@ defineExpose({ obtenerLista })
           <thead>
             <tr>
               <th width="4%">#</th>
-              <th width="30%">Producto</th>
+              <th width="28%">Producto</th>
               <th width="10%">Categoría</th>
-              <th width="8%">Tamaño</th>
-              <th width="9%">Precio</th>
+              <th width="12%">Tamaños</th>
+              <th width="8%">Precio</th>
+              <th width="7%">Stock</th>
               <th width="8%">Estado</th>
               <th width="10%" class="text-center">Acciones</th>
             </tr>
@@ -171,16 +169,17 @@ defineExpose({ obtenerLista })
                     <span class="producto-compact-name">{{ producto.nombre }}</span>
                     <small class="producto-compact-desc">{{ producto.descripcion }}</small>
                     <div class="producto-ingredients" v-if="producto.ingredientes && producto.ingredientes.length > 0">
-                      <span 
-                        v-for="pi in producto.ingredientes.slice(0, 5)" 
-                        :key="pi.id"
-                        class="ingredient-mini"
-                        :class="{ 'alergeno': pi.ingrediente.esAlergeno }"
-                        :title="pi.ingrediente.esAlergeno ? 'Alérgeno: ' + pi.ingrediente.nombre : pi.ingrediente.nombre"
-                      >
-                        <i v-if="pi.ingrediente.esAlergeno" class="fas fa-exclamation-triangle"></i>
-                        {{ pi.ingrediente.nombre }}
-                      </span>
+                      <template v-for="pi in producto.ingredientes.slice(0, 5)" :key="pi?.id">
+                        <span 
+                          v-if="pi && pi.ingrediente"
+                          class="ingredient-mini"
+                          :class="{ 'alergeno': pi.ingrediente.esAlergeno }"
+                          :title="pi.ingrediente.esAlergeno ? 'Alérgeno: ' + pi.ingrediente.nombre : pi.ingrediente.nombre"
+                        >
+                          <i v-if="pi.ingrediente.esAlergeno" class="fas fa-exclamation-triangle"></i>
+                          {{ pi.ingrediente.nombre }}
+                        </span>
+                      </template>
                       <span 
                         v-if="producto.ingredientes.length > 5" 
                         class="ingredient-mini"
@@ -194,18 +193,26 @@ defineExpose({ obtenerLista })
               </td>
               <td>
                 <span class="crud-badge crud-badge-compact crud-badge-info">
-                  {{ getCategoriaNombre(producto.idCategoria) }}
+                  {{ getCategoriaNombre(producto.categoria) }}
                 </span>
               </td>
               <td>
-                <span v-if="producto.idTamaño" class="crud-badge crud-badge-compact crud-badge-secondary">
-                  {{ getTamañoNombre(producto.idTamaño) }}
-                </span>
-                <span v-else class="text-muted" style="font-size: 0.8rem;">-</span>
+                <small style="font-size: 0.75rem;">
+                  {{ getTamañosTexto(producto.tamañosDisponibles) }}
+                </small>
               </td>
               <td>
                 <span class="precio-compact">
                   Bs. {{ Number(producto.precio).toFixed(2) }}
+                </span>
+              </td>
+              <td>
+                <span 
+                  class="crud-badge crud-badge-compact"
+                  :class="producto.stock > 0 ? 'crud-badge-success' : 'crud-badge-danger'"
+                  :title="'Stock: ' + producto.stock"
+                >
+                  {{ producto.stock }}
                 </span>
               </td>
               <td>

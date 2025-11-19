@@ -3,27 +3,35 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  JoinColumn,
-  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Categoria } from 'src/categorias/entities/categoria.entity';
 import { DetalleVenta } from 'src/detalle-ventas/entities/detalle-venta.entity';
-import { Tamaño } from 'src/tamaños/entities/tamaño.entity';
 import { ProductoIngrediente } from 'src/producto-ingredientes/entities/producto-ingrediente.entity';
+
+export enum CategoriaProducto {
+  PIZZA = 'pizza',
+  BEBIDA = 'bebida',
+  POSTRE = 'postre',
+  EXTRA = 'extra',
+}
+
+export enum TamañoProducto {
+  PERSONAL = 'personal',
+  MEDIANA = 'mediana',
+  FAMILIAR = 'familiar',
+  INDIVIDUAL = 'individual', // Para bebidas
+  LITRO = 'litro', // Para bebidas
+}
 
 @Entity('productos')
 export class Producto {
   @PrimaryGeneratedColumn('identity')
   id: number;
 
-  @Column('integer', { name: 'id_categoria', nullable: false })
-  idCategoria: number;
-
-  @Column('integer', { name: 'id_tamaño', nullable: true })
-  idTamaño: number;
+  @Column('enum', { enum: CategoriaProducto, nullable: false })
+  categoria: CategoriaProducto;
 
   @Column('varchar', { length: 150, nullable: false })
   nombre: string;
@@ -37,8 +45,17 @@ export class Producto {
   @Column('decimal', { precision: 10, scale: 2, nullable: false })
   precio: number;
 
+  @Column('integer', { default: 0 })
+  stock: number;
+
   @Column('varchar', { length: 255, nullable: true })
   imagenUrl: string;
+
+  // Tamaños disponibles para este producto (JSON)
+  // Ejemplo: ["personal", "mediana", "familiar"] para pizzas
+  // Ejemplo: ["individual", "litro"] para bebidas
+  @Column('simple-array', { nullable: true, name: 'tamaños_disponibles' })
+  tamañosDisponibles: string[];
 
   @Column('boolean', { default: true })
   disponible: boolean;
@@ -54,14 +71,6 @@ export class Producto {
 
   @DeleteDateColumn({ name: 'fecha_eliminacion' })
   fechaEliminacion: Date;
-
-  @ManyToOne(() => Categoria, (categoria) => categoria.productos)
-  @JoinColumn({ name: 'id_categoria', referencedColumnName: 'id' })
-  categoria: Categoria;
-
-  @ManyToOne(() => Tamaño, (tamaño) => tamaño.productos)
-  @JoinColumn({ name: 'id_tamaño', referencedColumnName: 'id' })
-  tamaño: Tamaño;
 
   @OneToMany(() => DetalleVenta, (detalle) => detalle.producto)
   detalles: DetalleVenta[];

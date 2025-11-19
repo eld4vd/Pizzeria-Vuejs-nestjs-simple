@@ -21,13 +21,7 @@ export class CreateIngredienteDto {
   @IsString({ message: 'El campo descripcion debe ser de tipo cadena' })
   readonly descripcion?: string;
 
-  @ApiProperty({ example: 15.50, required: false })
-  @IsOptional()
-  @IsNumber({}, { message: 'El campo precioPorUnidad debe ser de tipo número' })
-  @Min(0, { message: 'El precio debe ser mayor o igual a 0' })
-  readonly precioPorUnidad?: number;
-
-  @ApiProperty({ example: 'gramos', required: false })
+  @ApiProperty({ example: 'kg', required: false })
   @IsOptional()
   @IsString({ message: 'El campo unidadMedida debe ser de tipo cadena' })
   @MaxLength(50, {
@@ -35,10 +29,10 @@ export class CreateIngredienteDto {
   })
   readonly unidadMedida?: string;
 
-  @ApiProperty({ example: 100, required: false })
+  @ApiProperty({ example: 0, required: false })
   @IsOptional()
   @IsNumber({}, { message: 'El campo stock debe ser de tipo número' })
-  @Min(0, { message: 'El stock debe ser mayor o igual a 0' })
+  @Min(0, { message: 'El stock no puede ser negativo' })
   readonly stock?: number;
 
   @ApiProperty({

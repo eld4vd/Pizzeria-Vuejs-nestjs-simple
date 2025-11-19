@@ -5,10 +5,7 @@ import { useCartStore } from '@/stores/cart'
 import { useToast } from 'vue-toastification'
 import ProductoCard from '@/components/producto/ProductoCard.vue'
 import ProductoModal from '@/components/producto/ProductoModal.vue'
-import CartButton from '@/components/cart/CartButton.vue'
-import CartModal from '@/components/cart/CartModal.vue'
 import type { Producto } from '@/models/producto'
-import type { Categoria } from '@/models/categoria'
 
 const cartStore = useCartStore()
 const toast = useToast()
@@ -18,14 +15,12 @@ let refreshInterval: number | null = null
 
 // Estado
 const productos = ref<Producto[]>([])
-const categorias = ref<Categoria[]>([])
 const loading = ref(true)
 const error = ref('')
-const categoriaSeleccionada = ref<number | null>(null)
+const categoriaSeleccionada = ref<string | null>(null)
 const busqueda = ref('')
 const selectedProducto = ref<Producto | null>(null)
 const showModal = ref(false)
-const showCart = ref(false)
 
 // Computed
 const productosFiltrados = computed(() => {
@@ -36,7 +31,7 @@ const productosFiltrados = computed(() => {
 
   // Filtrar por categoría
   if (categoriaSeleccionada.value) {
-    result = result.filter(p => p.idCategoria === categoriaSeleccionada.value)
+    result = result.filter(p => p.categoria === categoriaSeleccionada.value)
     console.log(`📊 Productos en categoría ${categoriaSeleccionada.value}:`, result.length)
   }
 
@@ -65,44 +60,30 @@ const productosAgrupadosPorCategoria = computed(() => {
   }
 
   // Agrupar productos por categoría
-  const grupos: { [key: number]: { categoria: Categoria, productos: Producto[] } } = {}
+  const grupos: { [key: string]: { categoria: string, productos: Producto[] } } = {}
   
   productosFiltrados.value.forEach(producto => {
-    const categoria = categorias.value.find(c => c.id === producto.idCategoria)
-    if (categoria) {
-      if (!grupos[categoria.id]) {
-        grupos[categoria.id] = {
-          categoria: categoria,
-          productos: []
-        }
-      }
-      const grupo = grupos[categoria.id]
-      if (grupo) {
-        grupo.productos.push(producto)
+    const cat = producto.categoria
+    if (!grupos[cat]) {
+      grupos[cat] = {
+        categoria: cat,
+        productos: []
       }
     }
+    grupos[cat].productos.push(producto)
   })
 
   // Convertir a array y ordenar por prioridad
   const gruposArray = Object.values(grupos)
   
+  // Ordenar: pizza primero, bebida al final
   gruposArray.sort((a, b) => {
-    const indexA = ordenCategorias.findIndex(cat => 
-      a.categoria.nombre.toLowerCase().includes(cat.toLowerCase())
-    )
-    const indexB = ordenCategorias.findIndex(cat => 
-      b.categoria.nombre.toLowerCase().includes(cat.toLowerCase())
-    )
-    
-    // Si no está en el orden, ponerlo al final
-    const prioridadA = indexA === -1 ? 999 : indexA
-    const prioridadB = indexB === -1 ? 999 : indexB
-    
-    return prioridadA - prioridadB
+    const ordenMap: { [key: string]: number } = { pizza: 1, bebida: 2 }
+    return (ordenMap[a.categoria] || 99) - (ordenMap[b.categoria] || 99)
   })
 
   console.log('📊 Productos agrupados por categoría:', gruposArray.map(g => ({
-    categoria: g.categoria.nombre,
+    categoria: g.categoria,
     cantidad: g.productos.length
   })))
 
@@ -127,19 +108,14 @@ const cargarDatos = async () => {
     loading.value = true
     error.value = ''
 
-    console.log('🔄 Cargando productos y categorías...')
+    console.log('🔄 Cargando productos...')
 
-    const [productosRes, categoriasRes] = await Promise.all([
-      axios.get('/productos'),
-      axios.get('/categorias')
-    ])
+    const productosRes = await axios.get('/productos')
 
     console.log('✅ Productos recibidos:', productosRes.data.length)
-    console.log('✅ Categorías recibidas:', categoriasRes.data.length)
     console.log('📦 Productos:', productosRes.data)
 
     productos.value = productosRes.data
-    categorias.value = categoriasRes.data.filter((c: Categoria) => c.activo)
   } catch (err: any) {
     console.error('❌ Error al cargar datos:', err)
     console.error('Error completo:', err.response || err)
@@ -167,12 +143,8 @@ const handleViewDetails = (producto: Producto) => {
   showModal.value = true
 }
 
-const filtrarPorCategoria = (idCategoria: number | null) => {
-  categoriaSeleccionada.value = idCategoria
-}
-
-const openCart = () => {
-  showCart.value = true
+const filtrarPorCategoria = (categoria: string | null) => {
+  categoriaSeleccionada.value = categoria
 }
 
 onMounted(() => {
@@ -262,14 +234,20 @@ onUnmounted(() => {
               Todas
             </button>
             <button 
-              v-for="categoria in categorias" 
-              :key="categoria.id"
               type="button" 
               class="btn"
-              :class="categoriaSeleccionada === categoria.id ? 'btn-primary' : 'btn-outline-primary'"
-              @click="filtrarPorCategoria(categoria.id)"
+              :class="categoriaSeleccionada === 'pizza' ? 'btn-primary' : 'btn-outline-primary'"
+              @click="filtrarPorCategoria('pizza')"
             >
-              {{ categoria.nombre }}
+              🍕 Pizzas
+            </button>
+            <button 
+              type="button" 
+              class="btn"
+              :class="categoriaSeleccionada === 'bebida' ? 'btn-primary' : 'btn-outline-primary'"
+              @click="filtrarPorCategoria('bebida')"
+            >
+              🥤 Bebidas
             </button>
           </div>
         </div>
@@ -343,9 +321,9 @@ onUnmounted(() => {
       <!-- Vista normal (cuando hay categoría seleccionada o búsqueda) -->
       <div v-else class="container-wrap">
         <div class="row no-gutters d-flex">
-          <!-- Mostrar productos destacados primero si existen -->
+          <!-- Mostrar todos los productos filtrados -->
           <ProductoCard
-            v-for="producto in (productosDestacados.length > 0 ? productosDestacados : productosFiltrados.slice(0, 6))"
+            v-for="producto in productosFiltrados"
             :key="producto.id"
             :producto="producto"
             layout="grid"
@@ -410,15 +388,6 @@ onUnmounted(() => {
       :show="showModal"
       @close="showModal = false"
       @add-to-cart="handleAddToCartFromModal"
-    />
-
-    <!-- Botón flotante del carrito -->
-    <CartButton @open-cart="openCart" />
-
-    <!-- Modal del carrito -->
-    <CartModal 
-      :show="showCart"
-      @close="showCart = false"
     />
   </section>
 </template>

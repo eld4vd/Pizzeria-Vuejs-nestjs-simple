@@ -77,16 +77,6 @@ const router = createRouter({
           component: () => import('../views/dashboard/DashboardHome.vue'),
         },
         {
-          path: 'categorias',
-          name: 'dashboard-categorias',
-          component: () => import('../views/dashboard/CategoriasView.vue'),
-        },
-        {
-          path: 'tamaños',
-          name: 'dashboard-tamaños',
-          component: () => import('../views/dashboard/TamañosView.vue'),
-        },
-        {
           path: 'ingredientes',
           name: 'dashboard-ingredientes',
           component: () => import('../views/dashboard/IngredientesView.vue'),
@@ -95,6 +85,16 @@ const router = createRouter({
           path: 'productos',
           name: 'dashboard-productos',
           component: () => import('../views/dashboard/ProductosView.vue'),
+        },
+        {
+          path: 'proveedores',
+          name: 'dashboard-proveedores',
+          component: () => import('../views/dashboard/ProveedorView.vue'),
+        },
+        {
+          path: 'compras',
+          name: 'dashboard-compras',
+          component: () => import('../views/dashboard/CompraView.vue'),
         },
         {
           path: 'ventas',

@@ -20,9 +20,7 @@ const showModal = ref(false)
 const form = ref({
   nombre: '',
   descripcion: '',
-  precioPorUnidad: null as number | null,
   unidadMedida: '',
-  stock: 0,
   imagenUrl: '',
   disponible: true,
   esAlergeno: false
@@ -38,9 +36,7 @@ watch(() => props.ingrediente, (newVal) => {
     form.value = {
       nombre: newVal.nombre,
       descripcion: newVal.descripcion || '',
-      precioPorUnidad: newVal.precioPorUnidad ? Number(newVal.precioPorUnidad) : null,
       unidadMedida: newVal.unidadMedida || '',
-      stock: Number(newVal.stock),
       imagenUrl: newVal.imagenUrl || '',
       disponible: newVal.disponible,
       esAlergeno: newVal.esAlergeno
@@ -66,9 +62,7 @@ const resetForm = () => {
   form.value = {
     nombre: '',
     descripcion: '',
-    precioPorUnidad: null,
     unidadMedida: '',
-    stock: 0,
     imagenUrl: '',
     disponible: true,
     esAlergeno: false
@@ -81,13 +75,8 @@ const guardar = async () => {
     return
   }
 
-  if (!form.value.precioPorUnidad || form.value.precioPorUnidad <= 0) {
-    toast.warning('El precio por unidad es obligatorio y debe ser mayor a 0')
-    return
-  }
-
-  if (form.value.stock === null || form.value.stock < 0) {
-    toast.warning('El stock es obligatorio y no puede ser negativo')
+  if (!form.value.unidadMedida || !form.value.unidadMedida.trim()) {
+    toast.warning('La unidad de medida es obligatoria')
     return
   }
 
@@ -95,9 +84,7 @@ const guardar = async () => {
     const data = {
       nombre: form.value.nombre.trim(),
       descripcion: form.value.descripcion.trim() || null,
-      precioPorUnidad: Number(form.value.precioPorUnidad),
-      unidadMedida: form.value.unidadMedida.trim() || null,
-      stock: Number(form.value.stock),
+      unidadMedida: form.value.unidadMedida.trim(),
       imagenUrl: form.value.imagenUrl.trim() || null,
       disponible: form.value.disponible,
       esAlergeno: form.value.esAlergeno
@@ -164,15 +151,22 @@ defineExpose({ abrir })
 
               <div class="col-md-6">
                 <div class="form-group">
-                  <label for="unidadMedida">Unidad de Medida</label>
+                  <label for="unidadMedida">
+                    Unidad de Medida <span class="text-danger">*</span>
+                  </label>
                   <input
                     id="unidadMedida"
                     type="text"
                     class="form-control"
                     v-model="form.unidadMedida"
-                    placeholder="Ej: gramos, ml, unidades"
+                    placeholder="Ej: kg, litros, unidades"
                     maxlength="50"
+                    required
                   />
+                  <small class="form-text text-muted">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    La unidad se usará en compras y recetas
+                  </small>
                 </div>
               </div>
             </div>
@@ -187,56 +181,7 @@ defineExpose({ abrir })
                 placeholder="Descripción del ingrediente..."
                 maxlength="255"
               ></textarea>
-            </div>
-
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="precioPorUnidad">
-                    Precio por Unidad <span class="text-danger">*</span>
-                  </label>
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text">Bs.</span>
-                    </div>
-                    <input
-                      id="precioPorUnidad"
-                      type="number"
-                      step="0.01"
-                      min="0.01"
-                      class="form-control"
-                      v-model.number="form.precioPorUnidad"
-                      placeholder="0.00"
-                      required
-                    />
-                  </div>
-                  <small class="form-text text-info">
-                    <i class="fas fa-info-circle mr-1"></i>
-                    Este precio se usa para calcular el costo de los productos
-                  </small>
-                </div>
-              </div>
-
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="stock">
-                    Stock Disponible <span class="text-danger">*</span>
-                  </label>
-                  <input
-                    id="stock"
-                    type="number"
-                    min="0"
-                    class="form-control"
-                    v-model.number="form.stock"
-                    placeholder="0"
-                    required
-                  />
-                  <small class="form-text text-warning">
-                    <i class="fas fa-warehouse mr-1"></i>
-                    El stock se descuenta automáticamente con cada venta
-                  </small>
-                </div>
-              </div>
+              <small class="form-text text-muted">Opcional</small>
             </div>
 
             <div class="form-group">

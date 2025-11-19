@@ -73,7 +73,7 @@ export class Venta {
 
   @Column('enum', {
     enum: EstadoVenta,
-    default: EstadoVenta.PENDIENTE,
+    default: EstadoVenta.CONFIRMADA,
   })
   estado: EstadoVenta;
 

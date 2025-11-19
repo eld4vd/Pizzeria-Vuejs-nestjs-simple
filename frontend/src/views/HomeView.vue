@@ -98,8 +98,8 @@ onUnmounted(() => {
       <div class="container">
         <div class="row slider-text align-items-center" data-scrollax-parent="true">
           <div class="col-md-6 col-sm-12 order-md-last ftco-animate">
-            <span class="subheading">Crujiente</span>
-            <h1 class="mb-4">Pizza Italiana</h1>
+            <span class="subheading">Delicioso</span>
+            <h1 class="mb-4">Comida Italiana</h1>
             <p class="mb-4 mb-md-5">Un pequeño río llamado Duden fluye junto a su lugar y lo abastece con la necesaria regelialia.</p>
             <p>
               <RouterLink to="/menu" class="btn btn-primary p-3 px-xl-4 py-xl-3">Ordenar Ahora</RouterLink>
@@ -119,7 +119,7 @@ onUnmounted(() => {
         <div class="row slider-text justify-content-center align-items-center" data-scrollax-parent="true">
           <div class="col-md-7 col-sm-12 text-center ftco-animate">
             <span class="subheading">Bienvenido</span>
-            <h1 class="mb-4">Cocinamos tu receta de Pizza deseada</h1>
+            <h1 class="mb-4">Cocinamos tus recetas favoritas</h1>
             <p class="mb-4 mb-md-5">Un pequeño río llamado Duden fluye junto a su lugar y lo abastece con la necesaria regelialia.</p>
             <p>
               <RouterLink to="/menu" class="btn btn-primary p-3 px-xl-4 py-xl-3">Ordenar Ahora</RouterLink>
@@ -176,7 +176,7 @@ onUnmounted(() => {
     <div class="one-half img" style="background-image: url(/images/about.jpg);"></div>
     <div class="one-half ftco-animate">
       <div class="heading-section ftco-animate ">
-        <h2 class="mb-4">Bienvenido a <span class="flaticon-pizza">Pizza</span> Un Restaurante</h2>
+        <h2 class="mb-4">Bienvenido a <span class="flaticon-pizza"></span> Nuestro Restaurante</h2>
       </div>
       <div>
         <p>En su camino se encontró con una copia. La copia advirtió al Texto Ciego Pequeño que, de donde venía, habría sido reescrita mil veces y todo lo que quedaba de su origen sería la palabra "y" y el Texto Ciego Pequeño debería dar la vuelta y regresar a su propio país seguro. Pero nada de lo que dijo la copia pudo convencerla, por lo que no pasó mucho tiempo hasta que unos insidiosos Escritores de Copias la emboscaron, la emborracharon con Longe y Parole y la arrastraron a su agencia, donde abusaron de ella.</p>
@@ -223,83 +223,6 @@ onUnmounted(() => {
             <div class="media-body">
               <h3 class="heading">Recetas Originales</h3>
               <p>Incluso el todopoderoso Pointing no tiene control sobre los textos ciegos, es casi no ortográfico.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Hot Pizza Meals -->
-  <section class="ftco-section">
-    <div class="container">
-      <div class="row justify-content-center mb-5 pb-3">
-        <div class="col-md-7 heading-section ftco-animate text-center">
-          <h2 class="mb-4">Pizzas Calientes</h2>
-          <p>Muy muy lejos, detrás de las montañas de palabras, lejos de los países Vokalia y Consonantia, viven los textos ciegos.</p>
-        </div>
-      </div>
-    </div>
-    <div class="container-wrap">
-      <div class="row no-gutters d-flex">
-        <div class="col-lg-4 d-flex ftco-animate">
-          <div class="services-wrap d-flex">
-            <a href="#" class="img" style="background-image: url(/images/pizza-1.jpg);"></a>
-            <div class="text p-4">
-              <h3>Pizza Italiana</h3>
-              <p>Muy muy lejos, detrás de las montañas de palabras, lejos de los países Vokalia y Consonantia</p>
-              <p class="price"><span>$2.90</span> <a href="#" class="ml-2 btn btn-white btn-outline-white">Ordenar</a></p>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 d-flex ftco-animate">
-          <div class="services-wrap d-flex">
-            <a href="#" class="img" style="background-image: url(/images/pizza-2.jpg);"></a>
-            <div class="text p-4">
-              <h3>Pizza Griega</h3>
-              <p>Muy muy lejos, detrás de las montañas de palabras, lejos de los países Vokalia y Consonantia</p>
-              <p class="price"><span>$2.90</span> <a href="#" class="ml-2 btn btn-white btn-outline-white">Ordenar</a></p>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 d-flex ftco-animate">
-          <div class="services-wrap d-flex">
-            <a href="#" class="img" style="background-image: url(/images/pizza-3.jpg);"></a>
-            <div class="text p-4">
-              <h3>Pizza Caucásica</h3>
-              <p>Muy muy lejos, detrás de las montañas de palabras, lejos de los países Vokalia y Consonantia</p>
-              <p class="price"><span>$2.90</span> <a href="#" class="ml-2 btn btn-white btn-outline-white">Ordenar</a></p>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-lg-4 d-flex ftco-animate">
-          <div class="services-wrap d-flex">
-            <a href="#" class="img order-lg-last" style="background-image: url(/images/pizza-4.jpg);"></a>
-            <div class="text p-4">
-              <h3>Pizza Americana</h3>
-              <p>Muy muy lejos, detrás de las montañas de palabras, lejos de los países Vokalia y Consonantia</p>
-              <p class="price"><span>$2.90</span> <a href="#" class="ml-2 btn btn-white btn-outline-white">Ordenar</a></p>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 d-flex ftco-animate">
-          <div class="services-wrap d-flex">
-            <a href="#" class="img order-lg-last" style="background-image: url(/images/pizza-5.jpg);"></a>
-            <div class="text p-4">
-              <h3>Tarta de Tomate</h3>
-              <p>Muy muy lejos, detrás de las montañas de palabras, lejos de los países Vokalia y Consonantia</p>
-              <p class="price"><span>$2.90</span> <a href="#" class="ml-2 btn btn-white btn-outline-white">Ordenar</a></p>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 d-flex ftco-animate">
-          <div class="services-wrap d-flex">
-            <a href="#" class="img order-lg-last" style="background-image: url(/images/pizza-6.jpg);"></a>
-            <div class="text p-4">
-              <h3>Margherita</h3>
-              <p>Muy muy lejos, detrás de las montañas de palabras, lejos de los países Vokalia y Consonantia</p>
-              <p class="price"><span>$2.90</span> <a href="#" class="ml-2 btn btn-white btn-outline-white">Ordenar</a></p>
             </div>
           </div>
         </div>
@@ -355,7 +278,7 @@ onUnmounted(() => {
                 <div class="text">
                   <div class="icon"><span class="flaticon-pizza-1"></span></div>
                   <strong class="number" data-number="100">0</strong>
-                  <span>Sucursales de Pizza</span>
+                  <span>Platos Servidos</span>
                 </div>
               </div>
             </div>
@@ -411,7 +334,7 @@ onUnmounted(() => {
                 <div><a href="#">Admin</a></div>
                 <div><a href="#" class="meta-chat"><span class="icon-chat"></span> 3</a></div>
               </div>
-              <h3 class="heading mt-2"><a href="#">La Deliciosa Pizza</a></h3>
+              <h3 class="heading mt-2"><a href="#">Nuestras Recetas Especiales</a></h3>
               <p>Un pequeño río llamado Duden fluye junto a su lugar y lo abastece con la necesaria regelialia.</p>
             </div>
           </div>
@@ -425,7 +348,7 @@ onUnmounted(() => {
                 <div><a href="#">Admin</a></div>
                 <div><a href="#" class="meta-chat"><span class="icon-chat"></span> 3</a></div>
               </div>
-              <h3 class="heading mt-2"><a href="#">La Deliciosa Pizza</a></h3>
+              <h3 class="heading mt-2"><a href="#">Sabores Auténticos</a></h3>
               <p>Un pequeño río llamado Duden fluye junto a su lugar y lo abastece con la necesaria regelialia.</p>
             </div>
           </div>
@@ -439,7 +362,7 @@ onUnmounted(() => {
                 <div><a href="#">Admin</a></div>
                 <div><a href="#" class="meta-chat"><span class="icon-chat"></span> 3</a></div>
               </div>
-              <h3 class="heading mt-2"><a href="#">La Deliciosa Pizza</a></h3>
+              <h3 class="heading mt-2"><a href="#">Arte Culinario Italiano</a></h3>
               <p>Un pequeño río llamado Duden fluye junto a su lugar y lo abastece con la necesaria regelialia.</p>
             </div>
           </div>

@@ -73,7 +73,7 @@ onMounted(() => {
     <div class="one-half img" style="background-image: url(/images/about.jpg);"></div>
     <div class="one-half ftco-animate">
       <div class="heading-section ftco-animate ">
-        <h2 class="mb-4">Bienvenido a <span class="flaticon-pizza">Pizza</span> Un Restaurante</h2>
+        <h2 class="mb-4">Bienvenido a <span class="flaticon-pizza"></span> Nuestro Restaurante</h2>
       </div>
       <div>
         <p>En su camino se encontró con una copia. La copia advirtió al Texto Ciego Pequeño que, de donde venía, habría sido reescrita mil veces y todo lo que quedaba de su origen sería la palabra "y" y el Texto Ciego Pequeño debería dar la vuelta y regresar a su propio país seguro. Pero nada de lo que dijo la copia pudo convencerla, por lo que no pasó mucho tiempo hasta que unos insidiosos Escritores de Copias la emboscaron, la emborracharon con Longe y Parole y la arrastraron a su agencia, donde abusaron de ella.</p>
@@ -109,7 +109,7 @@ onMounted(() => {
             <div class="img mb-4" style="background-image: url(/images/person_2.jpg);"></div>
             <div class="info text-center">
               <h3><a href="#">Mark Wilson</a></h3>
-              <span class="position">Chef de Pizzas</span>
+              <span class="position">Chef de Pasta</span>
               <div class="text">
                 <p>Muy muy lejos, detrás de las montañas de palabras, lejos de los países Vokalia y Consonantia.</p>
               </div>

@@ -53,21 +53,21 @@ function toggleSidebar() {
             </router-link>
           </li>
           <li>
-            <router-link to="/dashboard/categorias" class="nav-item" active-class="active">
-              <i class="fas fa-tags"></i>
-              <span v-if="sidebarOpen">Categorías</span>
-            </router-link>
-          </li>
-          <li>
-            <router-link to="/dashboard/tamanos" class="nav-item" active-class="active">
-              <i class="fas fa-ruler-combined"></i>
-              <span v-if="sidebarOpen">Tamaños</span>
-            </router-link>
-          </li>
-          <li>
             <router-link to="/dashboard/ingredientes" class="nav-item" active-class="active">
               <i class="fas fa-leaf"></i>
               <span v-if="sidebarOpen">Ingredientes</span>
+            </router-link>
+          </li>
+          <li>
+            <router-link to="/dashboard/proveedores" class="nav-item" active-class="active">
+              <i class="fas fa-truck"></i>
+              <span v-if="sidebarOpen">Proveedores</span>
+            </router-link>
+          </li>
+          <li>
+            <router-link to="/dashboard/compras" class="nav-item" active-class="active">
+              <i class="fas fa-shopping-bag"></i>
+              <span v-if="sidebarOpen">Compras</span>
             </router-link>
           </li>
           <li class="nav-divider" v-if="sidebarOpen"></li>
@@ -144,34 +144,6 @@ function toggleSidebar() {
               </div>
             </router-link>
 
-            <!-- Categorías -->
-            <router-link to="/dashboard/categorias" class="shortcut-card shortcut-categorias">
-              <div class="shortcut-icon">
-                <i class="fas fa-tags"></i>
-              </div>
-              <div class="shortcut-content">
-                <h3>Categorías</h3>
-                <p>Organizar categorías de productos</p>
-              </div>
-              <div class="shortcut-arrow">
-                <i class="fas fa-arrow-right"></i>
-              </div>
-            </router-link>
-
-            <!-- Tamaños -->
-            <router-link to="/dashboard/tamanos" class="shortcut-card shortcut-tamanos">
-              <div class="shortcut-icon">
-                <i class="fas fa-ruler-combined"></i>
-              </div>
-              <div class="shortcut-content">
-                <h3>Tamaños</h3>
-                <p>Gestionar tamaños disponibles</p>
-              </div>
-              <div class="shortcut-arrow">
-                <i class="fas fa-arrow-right"></i>
-              </div>
-            </router-link>
-
             <!-- Ingredientes -->
             <router-link to="/dashboard/ingredientes" class="shortcut-card shortcut-ingredientes">
               <div class="shortcut-icon">
@@ -180,6 +152,34 @@ function toggleSidebar() {
               <div class="shortcut-content">
                 <h3>Ingredientes</h3>
                 <p>Administrar ingredientes</p>
+              </div>
+              <div class="shortcut-arrow">
+                <i class="fas fa-arrow-right"></i>
+              </div>
+            </router-link>
+
+            <!-- Proveedores -->
+            <router-link to="/dashboard/proveedores" class="shortcut-card shortcut-proveedores">
+              <div class="shortcut-icon">
+                <i class="fas fa-truck"></i>
+              </div>
+              <div class="shortcut-content">
+                <h3>Proveedores</h3>
+                <p>Gestionar proveedores</p>
+              </div>
+              <div class="shortcut-arrow">
+                <i class="fas fa-arrow-right"></i>
+              </div>
+            </router-link>
+
+            <!-- Compras -->
+            <router-link to="/dashboard/compras" class="shortcut-card shortcut-compras">
+              <div class="shortcut-icon">
+                <i class="fas fa-shopping-bag"></i>
+              </div>
+              <div class="shortcut-content">
+                <h3>Compras</h3>
+                <p>Registrar compras de ingredientes</p>
               </div>
               <div class="shortcut-arrow">
                 <i class="fas fa-arrow-right"></i>
@@ -532,28 +532,28 @@ function toggleSidebar() {
   background: linear-gradient(135deg, #fca100, #e85a19);
 }
 
-.shortcut-categorias {
-  color: #28a745;
-}
-
-.shortcut-categorias .shortcut-icon {
-  background: linear-gradient(135deg, #28a745, #1e7e34);
-}
-
-.shortcut-tamanos {
-  color: #17a2b8;
-}
-
-.shortcut-tamanos .shortcut-icon {
-  background: linear-gradient(135deg, #17a2b8, #117a8b);
-}
-
 .shortcut-ingredientes {
   color: #20c997;
 }
 
 .shortcut-ingredientes .shortcut-icon {
   background: linear-gradient(135deg, #20c997, #17a673);
+}
+
+.shortcut-proveedores {
+  color: #17a2b8;
+}
+
+.shortcut-proveedores .shortcut-icon {
+  background: linear-gradient(135deg, #17a2b8, #117a8b);
+}
+
+.shortcut-compras {
+  color: #28a745;
+}
+
+.shortcut-compras .shortcut-icon {
+  background: linear-gradient(135deg, #28a745, #1e7e34);
 }
 
 .shortcut-web {

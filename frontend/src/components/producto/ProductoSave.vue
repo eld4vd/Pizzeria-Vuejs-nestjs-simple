@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { ref, watch, onMounted, computed } from 'vue'
 import axios from '@/plugins/axios'
-import type { Producto } from '@/models/producto'
-import type { Categoria } from '@/models/categoria'
-import type { Tamaño } from '@/models/tamaño'
+import type { Producto, CategoriaProducto } from '@/models/producto'
 import { useToast } from 'vue-toastification'
 
 const toast = useToast()
@@ -36,17 +34,31 @@ const emit = defineEmits<{
 }>()
 
 const showModal = ref(false)
-const categorias = ref<Categoria[]>([])
-const tamaños = ref<Tamaño[]>([])
 const ingredientesDisponibles = ref<Ingrediente[]>([])
 const ingredientesProducto = ref<ProductoIngrediente[]>([])
 
+// Opciones de categorías y tamaños
+const categoriasOptions: { value: CategoriaProducto; label: string }[] = [
+  { value: 'pizza', label: '🍕 Pizza' },
+  { value: 'bebida', label: '🥤 Bebida' }
+]
+
+const tamañosOptions = [
+  'personal',
+  'mediana',
+  'familiar',
+  'individual',
+  'litro',
+  'medio litro'
+]
+
 const form = ref({
-  idCategoria: null as number | null,
-  idTamaño: null as number | null,
+  categoria: 'pizza' as CategoriaProducto,
   nombre: '',
   descripcion: '',
   precio: null as number | null,
+  stock: 0,
+  tamañosDisponibles: [] as string[],
   imagenUrl: '',
   disponible: true,
   destacado: false
@@ -62,13 +74,9 @@ const nuevoIngrediente = ref({
 const isEditing = ref(false)
 const editingId = ref<number | null>(null)
 
-// Computed para detectar si la categoría requiere personalización
-const categoriaSeleccionada = computed(() => {
-  return categorias.value.find(c => c.id === form.value.idCategoria)
-})
-
-const requierePersonalizacion = computed(() => {
-  return categoriaSeleccionada.value?.requierePersonalizacion || false
+// Computed para saber si es pizza (requiere tamaños e ingredientes)
+const esPizza = computed(() => {
+  return form.value.categoria === 'pizza'
 })
 
 // Calcular el costo total de los ingredientes agregados
@@ -88,11 +96,12 @@ watch(() => props.producto, async (newVal) => {
     isEditing.value = true
     editingId.value = newVal.id
     form.value = {
-      idCategoria: newVal.idCategoria,
-      idTamaño: newVal.idTamaño,
+      categoria: newVal.categoria,
       nombre: newVal.nombre,
       descripcion: newVal.descripcion,
       precio: Number(newVal.precio),
+      stock: newVal.stock || 0,
+      tamañosDisponibles: newVal.tamañosDisponibles || [],
       imagenUrl: newVal.imagenUrl || '',
       disponible: newVal.disponible,
       destacado: newVal.destacado
@@ -105,17 +114,11 @@ watch(() => props.producto, async (newVal) => {
 
 const cargarCatalogosDependientes = async () => {
   try {
-    const [categoriasRes, tamañosRes, ingredientesRes] = await Promise.all([
-      axios.get('/categorias'),
-      axios.get('/tamanos'),
-      axios.get('/ingredientes')
-    ])
-    categorias.value = categoriasRes.data.filter((c: Categoria) => c.activo)
-    tamaños.value = tamañosRes.data.filter((t: Tamaño) => t.activo)
+    const ingredientesRes = await axios.get('/ingredientes')
     ingredientesDisponibles.value = ingredientesRes.data.filter((i: Ingrediente) => i.disponible)
   } catch (error) {
-    console.error('Error al cargar catálogos:', error)
-    toast.error('Error al cargar catálogos')
+    console.error('Error al cargar ingredientes:', error)
+    toast.error('Error al cargar ingredientes')
   }
 }
 
@@ -149,11 +152,12 @@ const resetForm = () => {
   isEditing.value = false
   editingId.value = null
   form.value = {
-    idCategoria: null,
-    idTamaño: null,
+    categoria: 'pizza',
     nombre: '',
     descripcion: '',
     precio: null,
+    stock: 0,
+    tamañosDisponibles: [],
     imagenUrl: '',
     disponible: true,
     destacado: false
@@ -240,23 +244,29 @@ const guardar = async () => {
     return
   }
 
-  if (!form.value.idCategoria) {
+  if (!form.value.categoria) {
     toast.warning('Debe seleccionar una categoría')
     return
   }
 
   if (!form.value.precio || form.value.precio <= 0) {
-    toast.warning('El precio base es obligatorio y debe ser mayor a 0')
+    toast.warning('El precio es obligatorio y debe ser mayor a 0')
+    return
+  }
+
+  if (form.value.stock < 0) {
+    toast.warning('El stock no puede ser negativo')
     return
   }
 
   try {
     const data = {
-      idCategoria: Number(form.value.idCategoria),
-      idTamaño: form.value.idTamaño ? Number(form.value.idTamaño) : null,
+      categoria: form.value.categoria,
       nombre: form.value.nombre.trim(),
       descripcion: form.value.descripcion.trim() || null,
-      precio: Number(form.value.precio), // Precio base ingresado por el usuario
+      precio: Number(form.value.precio),
+      stock: Number(form.value.stock),
+      tamañosDisponibles: form.value.tamañosDisponibles || [],
       imagenUrl: form.value.imagenUrl.trim() || null,
       disponible: form.value.disponible,
       destacado: form.value.destacado
@@ -399,55 +409,71 @@ defineExpose({ abrir })
                   <select
                     id="categoria"
                     class="form-control"
-                    v-model="form.idCategoria"
+                    v-model="form.categoria"
                     required
                   >
-                    <option :value="null">Seleccione una categoría</option>
                     <option 
-                      v-for="categoria in categorias" 
-                      :key="categoria.id"
-                      :value="categoria.id"
+                      v-for="cat in categoriasOptions" 
+                      :key="cat.value"
+                      :value="cat.value"
                     >
-                      {{ categoria.nombre }}
-                      <span v-if="categoria.requierePersonalizacion" class="badge badge-warning ml-2">
-                        Personalizable
-                      </span>
+                      {{ cat.label }}
                     </option>
                   </select>
-                  <small v-if="categoriaSeleccionada" class="form-text">
-                    <i class="fas" :class="requierePersonalizacion ? 'fa-pizza-slice text-warning' : 'fa-glass-whiskey text-info'"></i>
-                    {{ requierePersonalizacion ? 'Esta categoría requiere tamaño e ingredientes' : 'Producto simple: solo nombre y precio' }}
+                  <small class="form-text">
+                    <i class="fas" :class="esPizza ? 'fa-pizza-slice text-warning' : 'fa-glass-whiskey text-info'"></i>
+                    {{ esPizza ? 'Las pizzas pueden tener múltiples tamaños e ingredientes' : 'Producto simple' }}
                   </small>
                 </div>
               </div>
 
-              <div class="col-md-6" v-if="requierePersonalizacion">
+              <div class="col-md-6">
                 <div class="form-group">
-                  <label for="tamaño">
-                    Tamaño <span class="text-danger">*</span>
+                  <label for="stock">
+                    Stock <span class="text-danger">*</span>
                   </label>
-                  <select
-                    id="tamaño"
+                  <input
+                    id="stock"
+                    type="number"
+                    min="0"
+                    step="1"
                     class="form-control"
-                    v-model="form.idTamaño"
-                    :required="requierePersonalizacion"
-                  >
-                    <option :value="null">Seleccione un tamaño</option>
-                    <option 
-                      v-for="tamaño in tamaños" 
-                      :key="tamaño.id"
-                      :value="tamaño.id"
-                    >
-                      {{ tamaño.nombre }} 
-                      <span v-if="tamaño.dimension">({{ tamaño.dimension }})</span>
-                      - x{{ tamaño.multiplicadorPrecio }}
-                    </option>
-                  </select>
+                    v-model.number="form.stock"
+                    placeholder="0"
+                    required
+                  />
                   <small class="form-text text-muted">
-                    Requerido para productos personalizables
+                    Cantidad disponible en inventario
                   </small>
                 </div>
               </div>
+            </div>
+
+            <!-- Tamaños Disponibles (para pizzas principalmente) -->
+            <div v-if="esPizza" class="form-group">
+              <label>
+                Tamaños Disponibles
+                <span class="text-muted">(opcional)</span>
+              </label>
+              <div class="row">
+                <div class="col-md-3" v-for="tamaño in tamañosOptions" :key="tamaño">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      :id="`tamaño-${tamaño}`"
+                      :value="tamaño"
+                      v-model="form.tamañosDisponibles"
+                    />
+                    <label class="custom-control-label" :for="`tamaño-${tamaño}`">
+                      {{ tamaño.charAt(0).toUpperCase() + tamaño.slice(1) }}
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <small class="form-text text-muted">
+                Selecciona los tamaños en que este producto está disponible
+              </small>
             </div>
 
             <div class="form-group">
@@ -479,8 +505,8 @@ defineExpose({ abrir })
               </div>
             </div>
 
-            <!-- SECCIÓN DE INGREDIENTES (Solo para productos personalizables) -->
-            <div v-if="requierePersonalizacion">
+            <!-- SECCIÓN DE INGREDIENTES (Solo para pizzas) -->
+            <div v-if="esPizza">
               <hr class="my-4" />
               <div class="form-group">
                 <h6 class="mb-3">

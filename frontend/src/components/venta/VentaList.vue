@@ -356,32 +356,13 @@ defineExpose({ obtenerLista })
                 </small>
               </td>
               <td>
-                <div class="dropdown">
-                  <button 
-                    class="btn btn-sm dropdown-toggle"
-                    :class="`btn-${getEstadoBadge(venta.estado).class}`"
-                    type="button"
-                    :id="`dropdownEstado${venta.id}`"
-                    data-toggle="dropdown"
-                    aria-haspopup="true"
-                    aria-expanded="false"
-                  >
-                    {{ getEstadoBadge(venta.estado).label }}
-                  </button>
-                  <div class="dropdown-menu dropdown-menu-right" :aria-labelledby="`dropdownEstado${venta.id}`">
-                    <h6 class="dropdown-header">Cambiar Estado</h6>
-                    <button
-                      v-for="estado in estados"
-                      :key="estado.value"
-                      class="dropdown-item"
-                      @click="cambiarEstado(venta.id, estado.value)"
-                      :disabled="venta.estado === estado.value"
-                    >
-                      <i class="fas fa-circle mr-2" :class="`text-${estado.class}`"></i>
-                      {{ estado.label }}
-                    </button>
-                  </div>
-                </div>
+                <span 
+                  class="crud-badge crud-badge-compact"
+                  :class="`crud-badge-${getEstadoBadge(venta.estado).class}`"
+                >
+                  <i class="fas fa-check-circle mr-1"></i>
+                  {{ getEstadoBadge(venta.estado).label }}
+                </span>
               </td>
               <td class="text-center">
                 <button

@@ -5,15 +5,15 @@ import { APP_GUARD } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { EmpleadosModule } from './empleados/empleados.module';
-import { CategoriasModule } from './categorias/categorias.module';
 import { ProductosModule } from './productos/productos.module';
 import { VentasModule } from './ventas/ventas.module';
 import { DetalleVentasModule } from './detalle-ventas/detalle-ventas.module';
 import { AuthModule } from './auth/auth.module';
-import { TamañosModule } from './tamaños/tamaños.module';
 import { IngredientesModule } from './ingredientes/ingredientes.module';
 import { ProductoIngredientesModule } from './producto-ingredientes/producto-ingredientes.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
+import { ProveedoresModule } from './proveedores/proveedores.module';
+import { ComprasModule } from './compras/compras.module';
 
 @Module({
   imports: [
@@ -30,14 +30,14 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
       autoLoadEntities: true,
     }),
     EmpleadosModule,
-    CategoriasModule,
     ProductosModule,
     VentasModule,
     DetalleVentasModule,
     AuthModule,
-    TamañosModule,
     IngredientesModule,
     ProductoIngredientesModule,
+    ProveedoresModule,
+    ComprasModule,
   ],
   controllers: [AppController],
   providers: [
