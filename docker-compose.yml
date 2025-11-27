@@ -1,0 +1,68 @@
+# ============================================
+# Docker Compose - Pizzeria Mana
+# Producción para VPS con dominio eld4vd.me
+# ============================================
+
+services:
+  db:
+    image: postgres:17-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-pizzeria123}
+      POSTGRES_DB: ${DB_NAME:-pizzeria_db}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d pizzeria_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    # ⚠️ NO exponer puerto en producción (solo accesible internamente)
+
+  backend:
+    build:
+      context: ./backend_pizzeria
+      dockerfile: Dockerfile
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USERNAME=${DB_USERNAME:-postgres}
+      - DB_PASSWORD=${DB_PASSWORD:-pizzeria123}
+      - DB_NAME=${DB_NAME:-pizzeria_db}
+      - JWT_SECRET=${JWT_SECRET:-tu_secreto_jwt_super_seguro_cambiar}
+      - JWT_EXPIRES_IN=${JWT_EXPIRES_IN:-1d}
+    networks:
+      - app-network
+    # ⚠️ NO exponer puerto (Nginx hace proxy)
+
+  nginx:
+    build:
+      context: ./frontend_pizzeria
+      dockerfile: Dockerfile
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      # Certificados SSL de Let's Encrypt
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+    networks:
+      - app-network
+
+volumes:
+  postgres-data:
+
+networks:
+  app-network:
+    driver: bridge
