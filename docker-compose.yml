@@ -1,7 +1,7 @@
 # ============================================
 # Docker Compose - Pizzeria Mana
 # Producción para VPS
-# Dominio: pizzeria_sis257.webdeploy.tech
+# Dominio: pizzeria-sis257.webdeploy.tech
 # ============================================
 
 services:

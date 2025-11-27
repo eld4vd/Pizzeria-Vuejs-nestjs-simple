@@ -66,36 +66,70 @@
             <hr class="my-2" style="border-color: rgba(255, 255, 255, 0.1)" />
           </li>
 
-          <!-- Nombre del cliente autenticado (base de datos) con link a Mis Pedidos -->
-          <li v-if="isClienteAutenticado" class="nav-item cliente-nav-item">
-            <RouterLink to="/mis-pedidos" class="cliente-info" title="Ver mis pedidos">
-              <span class="cliente-saludo">
-                <i class="fas fa-user-check mr-1"></i>
-                Hola, <strong>{{ authStore.userName }}</strong>
-              </span>
-              <span class="cliente-pedidos-link">
-                <i class="fas fa-receipt"></i>
-              </span>
-            </RouterLink>
-            <button class="btn-cerrar-cliente" @click="cerrarSesionClienteAuth" title="Cerrar sesión">
-              <i class="fas fa-times"></i>
-            </button>
+          <!-- Menú desplegable para Cliente autenticado (authStore) -->
+          <li v-if="isClienteAutenticado" class="nav-item dropdown cliente-dropdown ml-lg-2">
+            <a 
+              class="nav-link cliente-toggle" 
+              href="#" 
+              @click.prevent="toggleClienteMenu"
+              :class="{ 'active': clienteMenuOpen }"
+            >
+              <div class="cliente-avatar">
+                <i class="fas fa-user"></i>
+              </div>
+              <span class="cliente-name d-none d-lg-inline">{{ authStore.userName }}</span>
+              <i class="fas fa-chevron-down dropdown-arrow" :class="{ 'rotated': clienteMenuOpen }"></i>
+            </a>
+            <div class="cliente-dropdown-menu" :class="{ 'show': clienteMenuOpen }" @click.stop>
+              <div class="dropdown-header">
+                <i class="fas fa-user-circle mr-2"></i>
+                {{ authStore.userName }}
+                <small class="d-block text-muted">Cliente</small>
+              </div>
+              <div class="dropdown-divider"></div>
+              <RouterLink to="/mis-pedidos" class="dropdown-item" @click="closeClienteMenu">
+                <i class="fas fa-receipt mr-2"></i>
+                Mis Pedidos
+              </RouterLink>
+              <div class="dropdown-divider"></div>
+              <button type="button" class="dropdown-item logout-item" @click="cerrarSesionClienteAuth">
+                <i class="fas fa-sign-out-alt mr-2"></i>
+                Cerrar Sesión
+              </button>
+            </div>
           </li>
 
-          <!-- Nombre del cliente autenticado (localStorage legacy) con link a Mis Pedidos -->
-          <li v-else-if="clienteAutenticado" class="nav-item cliente-nav-item">
-            <RouterLink to="/mis-pedidos" class="cliente-info" title="Ver mis pedidos">
-              <span class="cliente-saludo">
-                <i class="fas fa-user-check mr-1"></i>
-                Hola, <strong>{{ clienteNombre }}</strong>
-              </span>
-              <span class="cliente-pedidos-link">
-                <i class="fas fa-receipt"></i>
-              </span>
-            </RouterLink>
-            <button class="btn-cerrar-cliente" @click="cerrarSesionCliente" title="Cerrar sesión de cliente">
-              <i class="fas fa-times"></i>
-            </button>
+          <!-- Menú desplegable para Cliente autenticado (localStorage legacy) -->
+          <li v-else-if="clienteAutenticado" class="nav-item dropdown cliente-dropdown ml-lg-2">
+            <a 
+              class="nav-link cliente-toggle" 
+              href="#" 
+              @click.prevent="toggleClienteMenu"
+              :class="{ 'active': clienteMenuOpen }"
+            >
+              <div class="cliente-avatar">
+                <i class="fas fa-user"></i>
+              </div>
+              <span class="cliente-name d-none d-lg-inline">{{ clienteNombre }}</span>
+              <i class="fas fa-chevron-down dropdown-arrow" :class="{ 'rotated': clienteMenuOpen }"></i>
+            </a>
+            <div class="cliente-dropdown-menu" :class="{ 'show': clienteMenuOpen }" @click.stop>
+              <div class="dropdown-header">
+                <i class="fas fa-user-circle mr-2"></i>
+                {{ clienteNombre }}
+                <small class="d-block text-muted">Cliente</small>
+              </div>
+              <div class="dropdown-divider"></div>
+              <RouterLink to="/mis-pedidos" class="dropdown-item" @click="closeClienteMenu">
+                <i class="fas fa-receipt mr-2"></i>
+                Mis Pedidos
+              </RouterLink>
+              <div class="dropdown-divider"></div>
+              <button type="button" class="dropdown-item logout-item" @click="cerrarSesionCliente">
+                <i class="fas fa-sign-out-alt mr-2"></i>
+                Cerrar Sesión
+              </button>
+            </div>
           </li>
 
           <!-- Botón de seguimiento de pedido (solo aparece si hay pedido activo) -->
@@ -184,9 +218,23 @@ const clienteNombre = computed(() => clienteStore.clienteNombre)
 // Estado del menú desplegable del admin
 const adminMenuOpen = ref(false)
 
+// Estado del menú desplegable del cliente
+const clienteMenuOpen = ref(false)
+
 const toggleAdminMenu = (event: Event) => {
   event.stopPropagation()
   adminMenuOpen.value = !adminMenuOpen.value
+  clienteMenuOpen.value = false // Cerrar el otro menú
+}
+
+const toggleClienteMenu = (event: Event) => {
+  event.stopPropagation()
+  clienteMenuOpen.value = !clienteMenuOpen.value
+  adminMenuOpen.value = false // Cerrar el otro menú
+}
+
+const closeClienteMenu = () => {
+  clienteMenuOpen.value = false
 }
 
 const closeAndNavigate = () => {
@@ -199,6 +247,9 @@ const handleClickOutside = (event: MouseEvent) => {
   const target = event.target as HTMLElement
   if (!target.closest('.admin-dropdown')) {
     adminMenuOpen.value = false
+  }
+  if (!target.closest('.cliente-dropdown')) {
+    clienteMenuOpen.value = false
   }
 }
 
@@ -219,13 +270,15 @@ const handleLogout = () => {
 }
 
 const cerrarSesionCliente = () => {
-  if (confirm('¿Cerrar sesión de cliente? Ya no podrás ver el seguimiento de tus pedidos.')) {
+  if (confirm('¿Cerrar sesión? Ya no podrás ver el seguimiento de tus pedidos.')) {
+    clienteMenuOpen.value = false
     clienteStore.clearCliente()
   }
 }
 
 const cerrarSesionClienteAuth = () => {
   if (confirm('¿Cerrar sesión? Ya no podrás ver el seguimiento de tus pedidos.')) {
+    clienteMenuOpen.value = false
     authStore.logoutCliente()
   }
 }
@@ -397,67 +450,6 @@ const cerrarSesionClienteAuth = () => {
   margin-right: 10px;
 }
 
-/* Cliente autenticado en header */
-.cliente-nav-item {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  margin-right: 15px;
-}
-
-.cliente-info {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: linear-gradient(135deg, rgba(40, 167, 69, 0.15), rgba(32, 201, 151, 0.15));
-  border: 1px solid rgba(40, 167, 69, 0.3);
-  padding: 6px 12px;
-  border-radius: 20px;
-  text-decoration: none;
-  transition: all 0.3s ease;
-}
-
-.cliente-info:hover {
-  background: linear-gradient(135deg, rgba(40, 167, 69, 0.25), rgba(32, 201, 151, 0.25));
-  border-color: rgba(40, 167, 69, 0.5);
-  transform: translateY(-1px);
-}
-
-.cliente-saludo {
-  color: #28a745;
-  font-size: 13px;
-  font-weight: 500;
-}
-
-.cliente-saludo strong {
-  color: #20c997;
-}
-
-.cliente-pedidos-link {
-  color: #fca100;
-  font-size: 14px;
-}
-
-.btn-cerrar-cliente {
-  background: rgba(220, 53, 69, 0.2);
-  border: none;
-  color: #dc3545;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 10px;
-  transition: all 0.3s ease;
-}
-
-.btn-cerrar-cliente:hover {
-  background: #dc3545;
-  color: white;
-}
-
 /* ===== MENÚ DESPLEGABLE DEL ADMIN ===== */
 .admin-dropdown {
   position: relative;
@@ -601,6 +593,143 @@ const cerrarSesionClienteAuth = () => {
   color: #dc3545;
 }
 
+/* ===== MENÚ DESPLEGABLE DEL CLIENTE ===== */
+.cliente-dropdown {
+  position: relative;
+  z-index: 1060;
+}
+
+.cliente-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, rgba(40, 167, 69, 0.15), rgba(32, 201, 151, 0.15)) !important;
+  border: 1px solid rgba(40, 167, 69, 0.3);
+  border-radius: 25px;
+  padding: 6px 14px !important;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cliente-toggle::after {
+  display: none !important;
+}
+
+.cliente-toggle:hover,
+.cliente-toggle.active {
+  background: linear-gradient(135deg, rgba(40, 167, 69, 0.25), rgba(32, 201, 151, 0.25)) !important;
+  border-color: rgba(40, 167, 69, 0.5);
+}
+
+.cliente-avatar {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, #28a745, #20c997);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 14px;
+}
+
+.cliente-name {
+  color: #28a745;
+  font-weight: 600;
+  font-size: 13px;
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cliente-toggle .dropdown-arrow {
+  color: #28a745;
+}
+
+/* Menú desplegable del cliente */
+.cliente-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 10px;
+  background: #1a1a1a;
+  border: 1px solid rgba(40, 167, 69, 0.3);
+  border-radius: 12px;
+  min-width: 220px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+  z-index: 1050;
+  overflow: hidden;
+}
+
+.cliente-dropdown-menu.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  z-index: 1070;
+}
+
+.cliente-dropdown-menu .dropdown-header {
+  padding: 15px 18px;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 14px;
+  background: rgba(40, 167, 69, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.cliente-dropdown-menu .dropdown-header small {
+  font-size: 11px;
+  color: #28a745;
+  font-weight: 500;
+}
+
+.cliente-dropdown-menu .dropdown-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 0;
+}
+
+.cliente-dropdown-menu .dropdown-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 18px;
+  color: #cccccc;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.cliente-dropdown-menu .dropdown-item:hover {
+  background: rgba(40, 167, 69, 0.15);
+  color: #28a745;
+  padding-left: 22px;
+}
+
+.cliente-dropdown-menu .dropdown-item i {
+  width: 20px;
+  text-align: center;
+}
+
+.cliente-dropdown-menu .logout-item {
+  color: #ff6b6b;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+
+.cliente-dropdown-menu .logout-item:hover {
+  background: rgba(220, 53, 69, 0.15);
+  color: #dc3545;
+}
+
 /* Navbar toggler mejorado */
 .navbar-toggler {
   border: 2px solid rgba(252, 161, 0, 0.5);
@@ -675,6 +804,26 @@ const cerrarSesionClienteAuth = () => {
   }
 
   .admin-dropdown-menu {
+    position: static;
+    width: 100%;
+    margin-top: 5px;
+    border-radius: 8px;
+  }
+
+  /* Cliente dropdown en móvil */
+  .cliente-dropdown {
+    width: 100%;
+  }
+
+  .cliente-toggle {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 15px !important;
+    border-radius: 8px;
+    margin-top: 10px;
+  }
+
+  .cliente-dropdown-menu {
     position: static;
     width: 100%;
     margin-top: 5px;
