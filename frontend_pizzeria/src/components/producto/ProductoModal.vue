@@ -60,8 +60,8 @@ const formatearTamaño = (tamaño: string) => {
 // Inicializar tamaño por defecto cuando se abre el modal
 watch(() => props.show, (newVal) => {
   if (newVal && props.producto) {
-    if (tieneTamañosDisponibles.value && props.producto.tamañosDisponibles) {
-      tamañoSeleccionado.value = props.producto.tamañosDisponibles[0]
+    if (tieneTamañosDisponibles.value && props.producto.tamañosDisponibles && props.producto.tamañosDisponibles.length > 0) {
+      tamañoSeleccionado.value = props.producto.tamañosDisponibles[0] ?? ''
     } else {
       tamañoSeleccionado.value = ''
     }
@@ -152,7 +152,7 @@ const handleClose = () => {
                       v-model="tamañoSeleccionado"
                     >
                     <span class="size-name">{{ formatearTamaño(tamaño) }}</span>
-                    <span class="size-price">+{{ ((preciosPorTamaño[tamaño] - 1) * 100).toFixed(0) }}%</span>
+                    <span class="size-price">+{{ (((preciosPorTamaño[tamaño] ?? 1) - 1) * 100).toFixed(0) }}%</span>
                   </label>
                 </div>
               </div>

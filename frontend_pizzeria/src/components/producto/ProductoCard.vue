@@ -60,10 +60,7 @@ const handleViewDetails = () => {
         </p>
         <div class="product-badges">
           <span v-if="producto.categoria" class="badge badge-info">
-            {{ producto.categoria.nombre }}
-          </span>
-          <span v-if="producto.tamaño" class="badge badge-primary ml-1">
-            {{ producto.tamaño.nombre }}
+            {{ producto.categoria }}
           </span>
           <span v-if="producto.destacado" class="badge badge-warning ml-1">Destacado</span>
         </div>
@@ -94,10 +91,7 @@ const handleViewDetails = () => {
           {{ producto.disponible ? 'Añadir al carrito' : 'No disponible' }}
         </button>
         <span v-if="producto.categoria" class="badge badge-info ml-2">
-          {{ producto.categoria.nombre }}
-        </span>
-        <span v-if="producto.tamaño" class="badge badge-primary ml-1">
-          {{ producto.tamaño.nombre }}
+          {{ producto.categoria }}
         </span>
       </div>
     </div>

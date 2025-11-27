@@ -52,21 +52,40 @@ const productosFiltrados = computed(() => {
 // Orden de prioridad de categorías: Pizzas primero, Bebidas al final
 const ordenCategorias = ['Pizza', 'Hamburguesa', 'Postre', 'Entrada', 'Bebida']
 
+// Interfaz para grupos de categoría
+interface GrupoCategoria {
+  categoria: string
+  nombre: string
+  descripcion: string
+  productos: Producto[]
+}
+
+// Nombres amigables para las categorías
+const nombresCategorias: Record<string, { nombre: string, descripcion: string }> = {
+  'pizza': { nombre: 'Pizzas', descripcion: 'Nuestras deliciosas pizzas artesanales' },
+  'bebida': { nombre: 'Bebidas', descripcion: 'Refrescantes bebidas para acompañar' },
+  'postre': { nombre: 'Postres', descripcion: 'Dulces tentaciones para el final' },
+  'extra': { nombre: 'Extras', descripcion: 'Complementos para tu pedido' }
+}
+
 // Productos agrupados por categoría cuando se selecciona "Todos"
-const productosAgrupadosPorCategoria = computed(() => {
+const productosAgrupadosPorCategoria = computed<GrupoCategoria[]>(() => {
   if (categoriaSeleccionada.value !== null) {
     // Si hay categoría específica, no agrupar
     return []
   }
 
   // Agrupar productos por categoría
-  const grupos: { [key: string]: { categoria: string, productos: Producto[] } } = {}
+  const grupos: { [key: string]: GrupoCategoria } = {}
   
   productosFiltrados.value.forEach(producto => {
     const cat = producto.categoria
     if (!grupos[cat]) {
+      const info = nombresCategorias[cat] || { nombre: cat, descripcion: '' }
       grupos[cat] = {
         categoria: cat,
+        nombre: info.nombre,
+        descripcion: info.descripcion,
         productos: []
       }
     }
@@ -285,7 +304,7 @@ onUnmounted(() => {
       <div v-if="categoriaSeleccionada === null && productosAgrupadosPorCategoria.length > 0">
         <div 
           v-for="grupo in productosAgrupadosPorCategoria" 
-          :key="grupo.categoria.id"
+          :key="grupo.categoria"
           class="mb-5"
         >
           <!-- Título de la categoría -->
@@ -295,9 +314,9 @@ onUnmounted(() => {
                 <div class="category-header">
                   <h3 class="category-title">
                     <i class="fas fa-utensils mr-2"></i>
-                    {{ grupo.categoria.nombre }}
+                    {{ grupo.nombre }}
                   </h3>
-                  <p class="category-description">{{ grupo.categoria.descripcion }}</p>
+                  <p class="category-description">{{ grupo.descripcion }}</p>
                 </div>
               </div>
             </div>
