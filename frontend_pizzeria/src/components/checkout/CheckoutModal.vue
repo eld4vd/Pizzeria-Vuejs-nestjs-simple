@@ -886,14 +886,211 @@ const handleClose = () => {
 
 /* Responsive */
 @media (max-width: 576px) {
+  .modal-overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+
   .checkout-modal {
     max-height: 100vh;
-    border-radius: 0;
+    border-radius: 20px 20px 0 0;
+    animation: slideUpMobile 0.3s ease;
+  }
+
+  @keyframes slideUpMobile {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
   }
   
-  .checkout-header { border-radius: 0; }
-  .checkout-footer { border-radius: 0; flex-direction: column; gap: 15px; }
-  .footer-actions { width: 100%; }
-  .footer-actions .btn { flex: 1; justify-content: center; }
+  .checkout-header { 
+    border-radius: 20px 20px 0 0;
+    padding: 15px 20px;
+  }
+
+  .checkout-title {
+    font-size: 18px;
+  }
+
+  .close-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  /* User info bar */
+  .user-info-bar {
+    padding: 10px 15px;
+    flex-wrap: wrap;
+    font-size: 13px;
+  }
+
+  .user-phone {
+    width: 100%;
+    margin-left: 28px;
+    margin-top: 5px;
+  }
+
+  /* Progress steps en móvil */
+  .progress-steps {
+    padding: 12px 15px;
+  }
+
+  .step-icon {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+
+  .step-label {
+    font-size: 10px;
+  }
+
+  .step-line {
+    width: 30px;
+  }
+
+  /* Body */
+  .checkout-body {
+    padding: 15px;
+  }
+
+  .section-title {
+    font-size: 16px;
+    margin-bottom: 15px;
+  }
+
+  /* Delivery banner */
+  .delivery-info-banner {
+    padding: 12px;
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+  }
+
+  .delivery-info-banner i {
+    font-size: 24px;
+  }
+
+  /* Form controls */
+  .form-control {
+    padding: 10px;
+    font-size: 16px; /* Evita zoom en iOS */
+  }
+
+  .form-label {
+    font-size: 13px;
+  }
+
+  /* Payment methods */
+  .payment-content {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .payment-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+
+  .payment-info h5 {
+    font-size: 14px;
+  }
+
+  .payment-info p {
+    font-size: 11px;
+  }
+
+  /* QR */
+  .qr-placeholder {
+    width: 150px;
+    height: 150px;
+  }
+
+  .qr-placeholder i {
+    font-size: 40px;
+  }
+
+  /* Confirmation details */
+  .detail-section {
+    padding: 12px;
+  }
+
+  .detail-section h5 {
+    font-size: 13px;
+  }
+
+  .detail-row {
+    font-size: 12px;
+    flex-wrap: wrap;
+  }
+
+  .detail-row .label {
+    width: 100%;
+    margin-bottom: 2px;
+  }
+
+  .cart-item-row {
+    font-size: 13px;
+    gap: 8px;
+  }
+
+  .totals .total-row {
+    font-size: 13px;
+  }
+
+  .totals .total-row.final {
+    font-size: 16px;
+  }
+
+  /* Footer */
+  .checkout-footer { 
+    border-radius: 0; 
+    flex-direction: column; 
+    gap: 12px;
+    padding: 12px 15px;
+    padding-bottom: 20px; /* Extra padding para dispositivos con notch */
+  }
+
+  .footer-total {
+    text-align: center;
+    width: 100%;
+  }
+
+  .footer-total strong {
+    font-size: 18px;
+  }
+
+  .footer-actions { 
+    width: 100%;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .footer-actions .btn { 
+    flex: 1; 
+    justify-content: center;
+    padding: 12px 20px;
+    font-size: 15px;
+  }
+}
+
+/* Extra small devices */
+@media (max-width: 375px) {
+  .step-line {
+    width: 20px;
+  }
+
+  .step-label {
+    font-size: 9px;
+  }
+
+  .checkout-title {
+    font-size: 16px;
+  }
+
+  .payment-content {
+    flex-direction: column;
+    text-align: center;
+  }
 }
 </style>

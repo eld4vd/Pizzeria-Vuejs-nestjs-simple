@@ -134,4 +134,142 @@ const handleViewDetails = () => {
   flex-wrap: wrap;
   gap: 0.25rem;
 }
+
+/* ===== RESPONSIVE MÓVIL ===== */
+@media (max-width: 991px) {
+  .col-lg-4 {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+}
+
+@media (max-width: 767px) {
+  .col-lg-4 {
+    flex: 0 0 100%;
+    max-width: 100%;
+    padding: 0 10px;
+  }
+
+  .services-wrap {
+    flex-direction: column !important;
+    margin-bottom: 20px;
+  }
+
+  .services-wrap .img {
+    height: 200px !important;
+    min-height: 200px;
+    width: 100% !important;
+    border-radius: 12px 12px 0 0 !important;
+  }
+
+  .services-wrap .text {
+    padding: 15px !important;
+  }
+
+  .services-wrap .text h3 {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+  }
+
+  .description {
+    font-size: 0.9rem;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    margin-bottom: 10px;
+  }
+
+  .price {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .price span {
+    font-size: 1.2rem;
+    font-weight: 700;
+  }
+
+  .price .btn {
+    flex: 1;
+    min-width: 100px;
+    padding: 10px 15px;
+    font-size: 0.9rem;
+  }
+
+  /* Lista view en móvil */
+  .pricing-entry {
+    flex-direction: column !important;
+    padding: 15px;
+    margin-bottom: 15px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+
+  .pricing-entry .img {
+    width: 100% !important;
+    height: 150px !important;
+    min-height: 150px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+
+  .pricing-entry .desc {
+    padding-left: 0 !important;
+    width: 100%;
+  }
+
+  .pricing-entry .d-flex.text {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 5px;
+  }
+
+  .pricing-entry .d-flex.text h3 {
+    margin-bottom: 5px;
+  }
+
+  .pricing-entry .d-flex.text .price {
+    font-size: 1.1rem;
+    color: #fca100;
+    font-weight: 700;
+  }
+
+  .pricing-entry .d-block {
+    margin-top: 10px;
+  }
+
+  .pricing-entry .d-block p {
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+  }
+
+  .pricing-entry .btn-sm {
+    width: 100%;
+    padding: 10px;
+    font-size: 0.95rem;
+  }
+
+  .pricing-entry .badge {
+    display: block;
+    margin-top: 8px;
+    margin-left: 0 !important;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .services-wrap .img {
+    height: 180px !important;
+  }
+
+  .services-wrap .text h3 {
+    font-size: 1rem;
+  }
+
+  .price span {
+    font-size: 1.1rem;
+  }
+}
 </style>

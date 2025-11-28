@@ -490,26 +490,138 @@ const handleClose = () => {
 
 /* Responsive */
 @media (max-width: 767px) {
+  .modal-dialog {
+    margin: 10px;
+    max-width: calc(100% - 20px);
+  }
+
+  .modal-content {
+    border-radius: 16px;
+  }
+
+  .modal-header {
+    padding: 12px 15px;
+    border-radius: 16px 16px 0 0;
+  }
+
+  .modal-title {
+    font-size: 1rem;
+  }
+
   .product-image {
     height: 180px;
   }
 
   .compact-modal-body {
     max-height: 65vh;
+    padding: 15px;
+  }
+
+  .compact-modal-body .row {
+    flex-direction: column;
+  }
+
+  .compact-modal-body .col-md-5,
+  .compact-modal-body .col-md-7 {
+    width: 100%;
+    max-width: 100%;
+    flex: 0 0 100%;
+  }
+
+  .compact-modal-body .col-md-5 {
+    margin-bottom: 15px;
+  }
+
+  .price-section h4 {
+    font-size: 1.3rem;
+    text-align: center;
+  }
+
+  .description-compact {
+    text-align: center;
+    font-size: 0.85rem;
+  }
+
+  /* Selector de tamaños en móvil */
+  .size-selector {
+    justify-content: center;
   }
 
   .size-option {
     min-width: 80px;
-    padding: 6px 4px;
+    padding: 10px 8px;
   }
 
   .size-option .size-name {
     font-size: 0.85rem;
   }
 
-  .total-display {
+  .size-option .size-price {
+    font-size: 0.7rem;
+  }
+
+  /* Cantidad y total en móvil */
+  .compact-modal-body .row.mb-2 .col-md-6 {
+    margin-bottom: 10px;
+  }
+
+  .quantity-control {
+    justify-content: center;
+  }
+
+  .qty-btn {
+    width: 44px;
+  }
+
+  .qty-input {
+    width: 60px;
     font-size: 1.1rem;
-    margin-top: 0.5rem;
+  }
+
+  .total-display {
+    font-size: 1.4rem;
+    padding: 10px;
+  }
+
+  /* Footer del modal */
+  .modal-footer {
+    padding: 12px 15px;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .modal-footer .btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+  }
+
+  /* Notas */
+  .form-group textarea {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .product-image {
+    height: 150px;
+  }
+
+  .size-option {
+    min-width: 70px;
+    padding: 8px 5px;
+  }
+
+  .size-option .size-name {
+    font-size: 0.8rem;
+  }
+
+  .modal-header .close {
+    font-size: 1.5rem;
+    padding: 0;
+    margin: 0;
+    width: 30px;
+    height: 30px;
   }
 }
 </style>

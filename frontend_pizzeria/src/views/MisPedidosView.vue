@@ -1096,6 +1096,11 @@ watch(() => isAnyCliente.value, (isAuth) => {
     font-size: 1.8rem;
   }
 
+  .hero-content h1 i {
+    display: block;
+    margin-bottom: 10px;
+  }
+
   .timeline-step span {
     font-size: 9px;
   }
@@ -1108,10 +1113,168 @@ watch(() => isAnyCliente.value, (isAuth) => {
 
   .timeline-line {
     margin-top: 14px;
+    min-width: 10px;
   }
 
   .pedido-header {
     flex-wrap: wrap;
+  }
+
+  .pedido-info {
+    width: 100%;
+    margin-bottom: 8px;
+  }
+
+  .pedido-total {
+    font-size: 16px;
+  }
+
+  /* Column header en móvil */
+  .column-header {
+    flex-direction: column;
+    text-align: center;
+    padding: 15px;
+  }
+
+  .column-header h2 {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+  }
+
+  .demo-badge {
+    font-size: 10px;
+  }
+
+  /* Pedidos list */
+  .pedidos-list {
+    padding: 15px;
+    max-height: 500px;
+  }
+
+  /* Timeline en móvil */
+  .timeline {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 10px;
+    gap: 5px;
+  }
+
+  .timeline-step {
+    flex-shrink: 0;
+  }
+
+  .timeline-line {
+    flex-shrink: 0;
+    width: 15px;
+  }
+
+  /* Progress bar */
+  .progress-bar {
+    height: 8px;
+  }
+
+  /* Detalle del pedido */
+  .pedido-detalle {
+    padding: 12px;
+  }
+
+  .producto-item {
+    font-size: 13px;
+  }
+
+  .btn-cancelar {
+    width: 100%;
+    padding: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-section {
+    padding: 25px 0;
+  }
+
+  .hero-content h1 {
+    font-size: 1.5rem;
+  }
+
+  .hero-content p {
+    font-size: 0.95rem;
+  }
+
+  .btn-volver {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+
+  .pedidos-section {
+    padding: 20px 0;
+  }
+
+  .container {
+    padding: 0 10px;
+  }
+
+  /* Empty state */
+  .empty-state i {
+    font-size: 60px;
+  }
+
+  .empty-state h3 {
+    font-size: 1.2rem;
+  }
+
+  /* Pedido card */
+  .pedido-card {
+    border-radius: 10px;
+  }
+
+  .pedido-numero {
+    font-size: 14px;
+  }
+
+  .pedido-estado {
+    font-size: 10px;
+    padding: 3px 8px;
+  }
+
+  /* Timeline más compacto */
+  .timeline-step span {
+    font-size: 8px;
+    max-width: 50px;
+  }
+
+  .step-icon {
+    width: 26px;
+    height: 26px;
+    font-size: 10px;
+  }
+
+  .timeline-line {
+    width: 10px;
+    margin-top: 12px;
+  }
+
+  /* Historial card */
+  .pedido-meta {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 8px;
+  }
+
+  .pedido-fecha {
+    font-size: 11px;
+  }
+}
+
+/* Landscape en móvil */
+@media (max-width: 768px) and (orientation: landscape) {
+  .hero-section {
+    padding: 20px 0;
+  }
+
+  .pedidos-list {
+    max-height: 300px;
   }
 }
 </style>

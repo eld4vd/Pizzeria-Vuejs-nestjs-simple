@@ -518,5 +518,85 @@ onUnmounted(() => {
   .category-title i {
     font-size: 1.3rem;
   }
+
+  /* Hero en móvil */
+  .slider-item .bread {
+    font-size: 1.8rem !important;
+  }
+
+  .slider-item .breadcrumbs {
+    font-size: 0.9rem;
+  }
+
+  /* Contenedor de productos en móvil */
+  .container-wrap {
+    padding: 0 10px;
+  }
+
+  .container-wrap .row {
+    margin: 0 -5px;
+  }
+
+  /* Filtros y búsqueda en móvil */
+  .container.mb-4 .row {
+    flex-direction: column;
+  }
+
+  .container.mb-4 .col-md-6 {
+    margin-bottom: 15px;
+  }
+
+  .input-group input {
+    font-size: 16px; /* Evita zoom en iOS */
+    padding: 12px 15px;
+  }
+
+  .input-group-append .input-group-text {
+    padding: 12px 15px;
+  }
+
+  /* Título del menú en móvil */
+  .heading-section h2 {
+    font-size: 1.8rem;
+  }
+
+  .heading-section p {
+    font-size: 0.95rem;
+    padding: 0 10px;
+  }
+
+  /* Lista de precios en móvil */
+  .pricing-entry {
+    margin-bottom: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .slider-item .bread {
+    font-size: 1.5rem !important;
+    margin-top: 20px !important;
+  }
+
+  .category-header {
+    padding: 1.5rem 0 0.75rem;
+  }
+
+  .category-title {
+    font-size: 1.3rem;
+  }
+
+  .category-description {
+    font-size: 0.9rem;
+  }
+
+  .heading-section h2 {
+    font-size: 1.5rem;
+  }
+
+  /* Botones de filtro más pequeños */
+  .btn-group .btn {
+    padding: 10px 15px;
+    font-size: 0.9rem;
+  }
 }
 </style>
