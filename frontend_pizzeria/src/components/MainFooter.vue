@@ -107,7 +107,7 @@
             <div class="col-md-6 text-center text-md-right">
               <p class="credits mb-0">
                 Desarrollado con <i class="fas fa-heart"></i> por 
-                <a href="https://github.com/eld4vd" target="_blank" rel="noopener">Javier Aramayo</a>
+                <span class="developer-name">Javier Aramayo</span>
               </p>
             </div>
           </div>

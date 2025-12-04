@@ -126,14 +126,12 @@ const cargarPedidos = async () => {
  * LÓGICA DE TIEMPO TRANSCURRIDO
  * 
  * Tiempos de simulación (desde la creación del pedido):
- * - 0 a 1 min: confirmada
- * - 1 a 2 min: preparando  
- * - 2 a 3 min: lista
- * - 3+ min: entregada (va al historial)
- * 
- * Esto hace que pedidos antiguos vayan automáticamente al historial
+ * - 0 a 10 seg: confirmada
+ * - 10 a 20 seg: preparando  
+ * - 20 a 30 seg: lista
+ * - 30+ seg: entregada (va al historial)
  */
-const TIEMPO_POR_ESTADO = 60 * 1000 // 1 minuto por estado (60 segundos)
+const TIEMPO_POR_ESTADO = 10 * 1000 // 10 segundos por estado
 
 const calcularEstadoPorTiempo = (fechaVenta: string, estadoActual: string): string => {
   // Si ya está cancelada, no cambiar
@@ -428,7 +426,7 @@ watch(() => isAnyCliente.value, (isAuth) => {
               </h2>
               <div class="demo-badge">
                 <i class="fas fa-magic mr-1"></i>
-                Demo: Avance cada 1 minuto
+                Demo: Avance cada 10 seg
               </div>
             </div>
 
