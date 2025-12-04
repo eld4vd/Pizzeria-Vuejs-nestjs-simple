@@ -77,7 +77,7 @@
               <div class="cliente-avatar">
                 <i class="fas fa-user"></i>
               </div>
-              <span class="cliente-name d-none d-lg-inline">{{ authStore.userName }}</span>
+              <span class="cliente-name">{{ authStore.userName }}</span>
               <i class="fas fa-chevron-down dropdown-arrow" :class="{ 'rotated': clienteMenuOpen }"></i>
             </a>
             <div class="cliente-dropdown-menu" :class="{ 'show': clienteMenuOpen }" @click.stop>
@@ -110,7 +110,7 @@
               <div class="cliente-avatar">
                 <i class="fas fa-user"></i>
               </div>
-              <span class="cliente-name d-none d-lg-inline">{{ clienteNombre }}</span>
+              <span class="cliente-name">{{ clienteNombre }}</span>
               <i class="fas fa-chevron-down dropdown-arrow" :class="{ 'rotated': clienteMenuOpen }"></i>
             </a>
             <div class="cliente-dropdown-menu" :class="{ 'show': clienteMenuOpen }" @click.stop>
@@ -207,7 +207,7 @@ const router = useRouter()
 
 const isAuthenticated = computed(() => authStore.isAuthenticated)
 const isAdmin = computed(() => authStore.isAdmin)
-const isClienteAutenticado = computed(() => authStore.isAuthenticated && authStore.isCliente)
+const isClienteAutenticado = computed(() => authStore.isAuthenticated && !authStore.isAdmin)
 const userName = computed(() => authStore.userName)
 const cartItemCount = computed(() => cartStore.itemCount)
 
@@ -823,11 +823,26 @@ const cerrarSesionClienteAuth = () => {
     margin-top: 10px;
   }
 
+  .cliente-name {
+    max-width: none;
+    font-size: 14px;
+  }
+
   .cliente-dropdown-menu {
     position: static;
     width: 100%;
     margin-top: 5px;
     border-radius: 8px;
+  }
+
+  .cliente-dropdown-menu .dropdown-item {
+    padding: 14px 18px;
+    font-size: 15px;
+  }
+
+  .cliente-dropdown-menu .logout-item {
+    padding: 14px 18px;
+    font-size: 15px;
   }
 
   .cart-nav-link {
